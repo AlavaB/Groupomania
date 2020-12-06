@@ -5,12 +5,13 @@ module.exports = app => {
   
     //Create a new User
     router.post("/", users.createUser);
-  
+    router.post("/login", users.login);
+
     //Get all Users
     router.get("/", users.getAllUsers);
 
     //Get one User
-    router.get("/:id", users.getOneUser);
+    //router.get("/:email", users.getOneUser);
   
     app.use('/api/users', router);
   };
