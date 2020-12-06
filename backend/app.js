@@ -25,5 +25,6 @@ app.get('/', (req, res) => {
 
 require('./routes/user')(app);
 require('./routes/post')(app);
+require('./routes/comment')(app);
 
 module.exports = app;
