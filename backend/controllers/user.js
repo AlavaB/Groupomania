@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 
 
 // Create and Save a new User
-exports.createUser = (req, res, next) => {
+exports.signup = (req, res, next) => {
   if (!req.body.email) {
     res.status(400).send({
     message: "Vous devez renseignez une adresse email"

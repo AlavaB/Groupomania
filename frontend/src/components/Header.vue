@@ -1,33 +1,32 @@
 <template>
-    <div class="container-fluid bg-light">
-        <div class="row">
-            <nav id="navbarSupportedContent" class="col navbar navbar-expand-lg navbar-light">
-                    <a class="navbar-brand " href="#">
-                        <img class="logo" src="../assets/logo_header.png" width="150" height="150" alt="Site Logo">
-                    </a>
-                    <button class="navbar-toggler pull-right" type="button" data-toggle="collapse" data-target="#navbarContent"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                <div id="navbarContent" class="collapse navbar-collapse justify-content-end">
-                        <ul class="navbar-nav">
-                            <li class="nav-item">Mon profil</li>
-                            <li class="nav-item">Administrateur</li>
-                            <li class="nav-item">Déconnexion</li>
-                            
+  <b-container class="mb-4"> 
+    <b-navbar class="pt-3" toggleable="lg" type="light">
+      <b-navbar-brand href="#">
+        <img class="logo" src="../assets/images/icon-header.png" width="280" height="60" alt="Site Logo"/>
+      </b-navbar-brand>
 
-
-                           
-                    </ul>
-                </div>
-            </nav>
-        </div>
-        
-    </div>
-
+      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+      <b-collapse id="nav-collapse" is-nav>
+        <b-navbar-nav class="ml-auto">
+          <b-nav-item><router-link class="header-link" to="/header">Mon profil</router-link></b-nav-item>
+          <b-nav-item><router-link class="header-link" to="/header">Administrateur</router-link></b-nav-item>
+          <b-nav-item><router-link class="header-link" to="/">Déconnexion</router-link></b-nav-item>
+        </b-navbar-nav>
+      </b-collapse>
+    </b-navbar>
+  </b-container>
 </template>
+ 
+<script>
+export default {
+  name: "Header",
+};
+</script>
 
-<style>
 
-
+<style scoped>
+    .header-link {
+        color: #fd2d01;
+        text-decoration: none;
+    }
 </style>
