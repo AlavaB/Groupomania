@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING, allowNull: true
       },
       is_admin: {
-        type: DataTypes.BOOLEAN, allowNull: false
+        type: DataTypes.BOOLEAN, defaultValue: 0
       }
     });
   

@@ -1,8 +1,8 @@
 <template>
   <b-container>
-    <b-row align-h="center mt-5">
+    <b-row align-h="center">
       <b-col class="text-center" lg="8">
-        <img src="../assets/images/icon-name.png" width="400" height="230" alt="">
+        <img class="picture" src="../assets/images/icon-name.png" alt="">
         <h1 class="pb-5">Bienvenue sur votre réseau social d'entreprise</h1>
       </b-col>
     </b-row>
@@ -18,7 +18,7 @@
             <b-form-input class="mt-3" id="input-3" v-model="form.password" type="password" required placeholder="Entrez votre mot de passe"></b-form-input>
             </b-form>
             <p class="text-center pt-4 ">Déjà inscrit ? <router-link to="/">Se connecter</router-link>
-            <b-button class="ml-5 submit" type="submit">S'inscrire</b-button></p> 
+            <b-button class="ml-5 submit" type="signup" @click="onSubmit">S'inscrire</b-button></p> 
           </b-col>
         </b-card>
         
@@ -29,11 +29,11 @@
 
 
 <script>
+import axios from 'axios'
+
 export default {
-  name: 'Login',
-  props: {
-    msg: String
-  },
+  name: "Signup",
+  
   data() {
       return {
         form: {
@@ -45,15 +45,23 @@ export default {
       }
     },
     methods: {
-      onSubmit(evt) {
-        evt.preventDefault()
-        alert(JSON.stringify(this.form))
-      }
-    }
+      onSubmit() {
+        let newUser = {
+          email: this.form.email,
+          pseudo: this.form.pseudo,
+          password: this.form.password
+        }
+        axios.post('http://localhost:3000/api/users', newUser)
+          .then(res => {
+            console.log(res)})
+          .catch(error => {
+            console.log(error.response)});
+    }        
+  }
 }
+
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .identification-box {
         background-color: #ffd7d7;
@@ -64,5 +72,10 @@ export default {
     }
     h1 {
       font-size: 1.5em;
+    }
+  .picture {
+      height: 250px;
+      background-size: cover;
+      background-position: center center;
     }
 </style>

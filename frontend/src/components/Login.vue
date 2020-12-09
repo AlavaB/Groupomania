@@ -1,8 +1,8 @@
 <template>
   <b-container>
-    <b-row align-h="center mt-5">
+    <b-row align-h="center">
       <b-col class="text-center" lg="8">
-        <img src="../assets/images/icon-name.png" width="400" height="230" alt="">
+        <img class="picture" src="../assets/images/icon-name.png" alt="">
         <h1 class="pb-5">Bienvenue sur votre réseau social d'entreprise</h1>
       </b-col>
     </b-row>
@@ -11,12 +11,12 @@
       <b-col lg="8">
         <b-card align="center" class="identification-box" title="Connectez-vous">
           <b-col offset-lg="2" lg="8">
-            <b-form @submit="onSubmit">
+            <b-form @submit="login">
             <b-form-input class="mt-4" id="input-1" v-model="form.email" type="email" required placeholder="Entrez votre adresse email"></b-form-input>
             <b-form-input class="mt-3" id="input-2" v-model="form.password" type="password" required placeholder="Entrez votre mot de passe"></b-form-input>
               </b-form>
             <p class="text-center pt-4 ">Pas de compte ? <router-link to="/signup">Inscription</router-link>
-            <b-button class="ml-5 submit" type="submit">Se connecter</b-button>  </p> 
+            <b-button class="ml-5 submit" type="submit" @click="login">Se connecter</b-button></p> 
           </b-col>
         </b-card>
       
@@ -26,21 +26,34 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
-  name: 'Login',
+  name: "Login",
   data() {
       return {
         form: {
           email: '',
           password: '',
         },
+        error: '',
       
       }
     },
     methods: {
-     
+      login() {
+        console.log(user);
+        let user = {
+          email: this.form.email,
+          password: this.form.password
+        }
+        
+        axios.post('http://localhost:3000/api/users/login', user)
+          .then(res => {console.log(res)})
+          .catch(error => {console.log(error.response)});  
+      }
     }
-}
+}  
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -54,6 +67,11 @@ export default {
     }
     h1 {
       font-size: 1.5em;
+    }
+    .picture {
+      height: 250px;
+      background-size: cover;
+      background-position: center center;
     }
 </style>
     
