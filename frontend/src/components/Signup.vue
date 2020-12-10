@@ -2,7 +2,7 @@
   <b-container>
     <b-row align-h="center">
       <b-col class="text-center" lg="8">
-        <img class="picture" src="../assets/images/icon-name.png" alt="">
+        <img class="icon-name" src="../assets/images/icon-name.png" alt="Logo and company name">
         <h1 class="pb-5">Bienvenue sur votre réseau social d'entreprise</h1>
       </b-col>
     </b-row>
@@ -17,8 +17,9 @@
             <b-form-input class="mt-3" id="input-2" v-model="form.email" type="email" required placeholder="Entrez votre adresse email"></b-form-input>
             <b-form-input class="mt-3" id="input-3" v-model="form.password" type="password" required placeholder="Entrez votre mot de passe"></b-form-input>
             </b-form>
-            <p class="text-center pt-4 ">Déjà inscrit ? <router-link to="/">Se connecter</router-link>
+            <p class="text-center pt-4 ">Déjà inscrit ? <router-link to="/login">Se connecter</router-link>
             <b-button class="ml-5 submit" type="signup" @click="onSubmit">S'inscrire</b-button></p> 
+            {{ error }}
           </b-col>
         </b-card>
         
@@ -41,7 +42,8 @@ export default {
           pseudo: '',
           password: '',
         },
-        show: true
+        show: true,
+        error: '',
       }
     },
     methods: {
@@ -53,11 +55,14 @@ export default {
         }
         axios.post('http://localhost:3000/api/users', newUser)
           .then(res => {
-            console.log(res)})
-          .catch(error => {
-            console.log(error.response)});
-    }        
-  }
+            console.log(res)
+          }, err => {
+            this.error = err.response.data.title
+          }
+          )
+         
+      }        
+    }
 }
 
 </script>
@@ -73,9 +78,7 @@ export default {
     h1 {
       font-size: 1.5em;
     }
-  .picture {
+  .icon-name {
       height: 250px;
-      background-size: cover;
-      background-position: center center;
     }
 </style>

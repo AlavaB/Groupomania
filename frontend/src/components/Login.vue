@@ -2,7 +2,7 @@
   <b-container>
     <b-row align-h="center">
       <b-col class="text-center" lg="8">
-        <img class="picture" src="../assets/images/icon-name.png" alt="">
+        <img class="icon-name" src="../assets/images/icon-name.png" alt="Logo and company name">
         <h1 class="pb-5">Bienvenue sur votre réseau social d'entreprise</h1>
       </b-col>
     </b-row>
@@ -15,11 +15,11 @@
             <b-form-input class="mt-4" id="input-1" v-model="form.email" type="email" required placeholder="Entrez votre adresse email"></b-form-input>
             <b-form-input class="mt-3" id="input-2" v-model="form.password" type="password" required placeholder="Entrez votre mot de passe"></b-form-input>
               </b-form>
-            <p class="text-center pt-4 ">Pas de compte ? <router-link to="/signup">Inscription</router-link>
+            <p class="text-center pt-4 ">Pas de compte ? <router-link to="/signup">S'inscrire</router-link>
             <b-button class="ml-5 submit" type="submit" @click="login">Se connecter</b-button></p> 
+            {{ error }}
           </b-col>
         </b-card>
-      
       </b-col>
     </b-row>
   </b-container>
@@ -37,22 +37,26 @@ export default {
           password: '',
         },
         error: '',
-      
       }
-    },
-    methods: {
+  },
+  methods: {
       login() {
-        console.log(user);
         let user = {
           email: this.form.email,
           password: this.form.password
         }
-        
         axios.post('http://localhost:3000/api/users/login', user)
-          .then(res => {console.log(res)})
-          .catch(error => {console.log(error.response)});  
+          .then(res => {
+            if (res.status === 200) {
+              localStorage.setItem('token', res.data.token);
+              this.$router.push('/');
+            }
+          })
+          .catch(err => {
+            this.error = err.response.data.title
+          });  
       }
-    }
+  }
 }  
 </script>
 
@@ -68,10 +72,8 @@ export default {
     h1 {
       font-size: 1.5em;
     }
-    .picture {
+    .icon-name {
       height: 250px;
-      background-size: cover;
-      background-position: center center;
     }
 </style>
     

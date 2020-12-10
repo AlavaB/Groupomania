@@ -10,13 +10,16 @@
                             <p>TO DO Image profil</p>
                         </div>
                         <div class="d-flex mt-4">
-                            <b-form-input class="mr-4" id="input-1" v-model="form.pseudo" placeholder="Mon pseudo"></b-form-input><b-button>Modifier</b-button>                    
+                            <b-form-input class="mr-4" id="input-1" v-model="form.pseudo" placeholder="Mon pseudo">
+                                </b-form-input><b-button>Modifier</b-button>                    
                         </div>
                         <div class="d-flex mt-4">
-                            <b-form-input class="mr-4" id="input-2" v-model="form.email" type="email" placeholder="Mon adresse email"></b-form-input><b-button>Modifier</b-button>
+                            <b-form-input class="mr-4" id="input-2" v-model="form.email" type="email" placeholder="Mon adresse email">
+                                </b-form-input><b-button>Modifier</b-button>
                         </div>
                         <div class="d-flex mt-4">
-                            <b-form-input class="mr-4" id="input-3" v-model="form.password" type="password" placeholder="Mon mot de passe"></b-form-input><b-button>Modifier</b-button>
+                            <b-form-input class="mr-4" id="input-3" v-model="form.password" type="password" placeholder="Mon mot de passe">
+                                </b-form-input><b-button>Modifier</b-button>
                         </div>
 
                     </b-col>
@@ -47,10 +50,7 @@ export default {
       }
     },
 };
-
-
 </script>
-
 
 <style scoped>
   .identification-box {

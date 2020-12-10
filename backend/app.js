@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const jwt = require("jsonwebtoken");
 
 const app = express();
 
@@ -21,5 +22,13 @@ app.get('/', (req, res) => {
 
 require('./routes/user')(app);
 require('./routes/post')(app);
+require('./routes/comment')(app);
+
+/*const posts = function(posts) {
+  this.content = posts.content;
+  this.image = posts.image;
+  this.user_id = posts.user_id;
+};
+console.log(posts.content);*/
 
 module.exports = app;

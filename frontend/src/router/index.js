@@ -4,7 +4,6 @@ import VueRouter from 'vue-router'
 
 import Login from '../components/Login'
 import Signup from '../components/Signup'
-import Header from '../components/Header'
 import Profile from '../components/Profile'
 import Forum from '../components/Forum'
 
@@ -14,8 +13,8 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'Login',
-    component: Login
+    name: 'Forum',
+    component: Forum
   },
   {
     path: '/signup',
@@ -23,19 +22,14 @@ const routes = [
     component: Signup
   },
   {
-    path: '/header',
-    name: 'Header',
-    component: Header
-  },
-  {
     path: '/profile',
     name: 'Profile',
     component: Profile
   },
   {
-    path: '/forum',
-    name: 'Forum',
-    component: Forum
+    path: '/login',
+    name: 'Login',
+    component: Login
   },
 ]
 

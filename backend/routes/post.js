@@ -8,6 +8,7 @@ module.exports = app => {
   
     //Get one Post
     router.get("/:id", posts.getOnePost);
-  
+    router.get("/", posts.getAllPosts);
+
     app.use('/api/posts', router);
   };
