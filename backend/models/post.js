@@ -1,3 +1,6 @@
+const moment = require('moment');
+moment.locale('fr');
+
 module.exports = (sequelize, DataTypes) => {
     const Post = sequelize.define("post", {
         id: {
@@ -17,6 +20,9 @@ module.exports = (sequelize, DataTypes) => {
         },
         created_at: {
             type: DataTypes.DATE,
+            get() {
+                return moment(this.getDataValue('created_at')).format('DD/MM/YYYY HH:mm:ss');
+            },
             allowNull: true
           },
           updated_at: {

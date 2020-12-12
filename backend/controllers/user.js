@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");//Package de cryptage pour les mots de passe
 const jwt = require("jsonwebtoken");
 const db = require('../models');
 const User = db.user;
+const { secret } = require('../config.json');
 
 const Op = db.Sequelize.Op;
 
@@ -37,7 +38,7 @@ exports.createUser = (req, res, next) => {
           message: "Inscription réussie"
           }); 
         })
-        .catch(error => res.status(409).send({ 
+        .catch(error => res.status(40).send({ 
             title: error
             //error: "Echec de l'inscription"
         }));
@@ -54,23 +55,17 @@ exports.getAllUsers = (req, res, next) => {
   var condition = email ? { email: { [Op.like]: `%${email}%` } } : null;*/
 
   User.findAll({include: [
-    {
-      model: db.post,
+    {model: db.post,
       include: [
-        {
-          model: db.comment
-        }
-      ]
-    }
+        {model: db.comment
+      }]}
   ]})
-  .then(users => {
-    const resObj = users.map(user => {
+  .then(users => { const resObj = users.map(user => {
 
       //tidy up the user data
       return Object.assign(
         {},
-        {
-          user_id: user.id,
+        { user_id: user.id,
           pseudo: user.pseudo,
           email: user.email,
           picture: user.profil_picture,
@@ -122,7 +117,7 @@ exports.getOneUser = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {//Fonction login pour connecter des users existants
-
+  
   User.findOne({ where: { email: req.body.email } })
     .then(user => {
       if (!user) {
@@ -139,11 +134,14 @@ exports.login = (req, res, next) => {//Fonction login pour connecter des users e
               error: "Identification non valide" 
             });
           }
+          //delete res.config.data.password;
+          
           res.status(200).json({//Requête OK 
             userId: user.id,
+            admin: user.is_admin,
             token: jwt.sign(
               { userId: user.id },
-              "RANDOM_TOKEN_SECRET",
+              secret,
               { expiresIn: "24h" }
             )
           });

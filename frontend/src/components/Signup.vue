@@ -12,11 +12,10 @@
         
         <b-card align="center" class="identification-box" title="Inscrivez-vous">
           <b-col offset-lg="2" lg="8">
-            <b-form @submit="onSubmit">
-            <b-form-input class="mt-4" id="input-1" v-model="form.pseudo" required placeholder="Entrez votre pseudo"></b-form-input>
+            <b-form-input id="input-1" v-model="form.pseudo" required placeholder="Entrez votre pseudo"></b-form-input>
+            
             <b-form-input class="mt-3" id="input-2" v-model="form.email" type="email" required placeholder="Entrez votre adresse email"></b-form-input>
             <b-form-input class="mt-3" id="input-3" v-model="form.password" type="password" required placeholder="Entrez votre mot de passe"></b-form-input>
-            </b-form>
             <p class="text-center pt-4 ">Déjà inscrit ? <router-link to="/login">Se connecter</router-link>
             <b-button class="ml-5 submit" type="signup" @click="onSubmit">S'inscrire</b-button></p> 
             {{ error }}
@@ -44,18 +43,31 @@ export default {
         },
         show: true,
         error: '',
+        regex: /^(([^<>()\]\\.,;:\s@"]+(\.[^<>()\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
       }
     },
     methods: {
       onSubmit() {
         let newUser = {
-          email: this.form.email,
           pseudo: this.form.pseudo,
+          email: this.form.email,
           password: this.form.password
+        }
+        //event.preventDefault()
+        //if (this.formpesudo === )
+        if (this.form.email === '') {
+          this.error = "vous devez renseigner une adresse email";
+        }
+        else if (!this.regex.test(this.form.email))
+        {
+          this.error = "Vous devez renseigner une adresse email valide";
         }
         axios.post('http://localhost:3000/api/users', newUser)
           .then(res => {
-            console.log(res)
+            if (res.status === 200) {
+              localStorage.setItem('token', res.data.token);
+              this.$router.push('/');
+            }
           }, err => {
             this.error = err.response.data.title
           }

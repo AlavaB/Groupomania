@@ -10,7 +10,7 @@
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav class="ml-auto">
-          <b-nav-item class="icon"><router-link class="header-link" to="/profile">Profil</router-link></b-nav-item>
+          <b-nav-item><router-link class="header-link" to="/profile">Profil</router-link></b-nav-item>
           <b-nav-item @click="logout"><router-link class="header-link" to="/">Déconnexion</router-link></b-nav-item>
         </b-navbar-nav>
       </b-collapse>
@@ -40,8 +40,5 @@ export default {
     .logo {
         height: 50px;
     }
-    .icon {
-      border: solid 0.15em #fd2d01;
-      border-radius: 50%;
-    }
+
 </style>

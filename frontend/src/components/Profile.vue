@@ -4,13 +4,13 @@
 
         <b-row align-h="center">
             <b-col lg="8">
-                <b-card align="center" class="identification-box" title="Mon profil">
+                <b-card align="center" class="identification-box" title="Mon profil" v-for="user in users" :key="user.id" >
                     <b-col offset-lg="2" lg="8">
                         <div>
                             <p>TO DO Image profil</p>
                         </div>
                         <div class="d-flex mt-4">
-                            <b-form-input class="mr-4" id="input-1" v-model="form.pseudo" placeholder="Mon pseudo">
+                            <b-form-input class="mr-4" id="input-1" v-model="form.pseudo" placeholder="Mon pseudo" {{ user.pseudo }}>
                                 </b-form-input><b-button>Modifier</b-button>                    
                         </div>
                         <div class="d-flex mt-4">
@@ -45,10 +45,12 @@ export default {
           email: '',
           pseudo: '',
           password: '',
-        },
-      
+        }, 
+
       }
     },
+    
+
 };
 </script>
 

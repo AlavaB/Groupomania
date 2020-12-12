@@ -9,10 +9,10 @@ module.exports = app => {
   router.post("/login", users.login);
 
   //Get all Users
-  router.get("/", users.getAllUsers);//A voir pour supprimé si pas utile
+  router.get("/", users.getAllUsers);//A voir pour supprimer si pas utile
 
   //Get one User
-  router.get("/get", auth, users.getOneUser);//A voir pour supprimé si pas utile
+  router.get("/:id", users.getOneUser);//A voir pour supprimer si pas utile
 
   app.use('/api/users', router);
 };

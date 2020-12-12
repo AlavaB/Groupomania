@@ -5,9 +5,10 @@ module.exports = (req, res, next) => {
 	try {
 		const token = req.headers.authorization; //Récupération du token du header
 		const decodedToken = jwt.verify(token, secret); //Décodage du token
-		const userId = decodedToken.userId;
-		if (req.headers.userid && req.headers.userid !== userId) {
-			throw "User ID non valable !";
+        const admin = decodedToken.admin;
+        const userId = decodedToken.userId;
+		if (admin !== true && userId !== req.headers.objectid) {
+			throw "Action non autorisée";
 		} else {
 			next();
 		}

@@ -1,5 +1,6 @@
 module.exports = app => {
     const posts = require('../controllers/post');
+    const auth = require('../middleware/auth');
   
     var router = require('express').Router();
   
@@ -8,7 +9,7 @@ module.exports = app => {
   
     //Get one Post
     router.get("/:id", posts.getOnePost);
-    router.get("/", posts.getAllPosts);
+    router.get("/", auth, posts.getAllPosts);
 
     app.use('/api/posts', router);
   };
