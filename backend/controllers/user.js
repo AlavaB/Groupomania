@@ -113,7 +113,15 @@ exports.getAllUsers = (req, res, next) => {
 
 // Get a single User with an id
 exports.getOneUser = (req, res, next) => {
-  res.status(200).send()
+  const id = req.params.id;
+
+  User.findByPk(id)
+    .then(user => { res.status(200).json({
+      admin: user.is_admin,
+      userId: user.id
+    }) 
+  })
+    .catch(error => res.status(500).json({ error }));
 };
 
 exports.login = (req, res, next) => {//Fonction login pour connecter des users existants
@@ -138,7 +146,6 @@ exports.login = (req, res, next) => {//Fonction login pour connecter des users e
           
           res.status(200).json({//Requête OK 
             userId: user.id,
-            admin: user.is_admin,
             token: jwt.sign(
               { userId: user.id },
               secret,
@@ -156,3 +163,33 @@ exports.login = (req, res, next) => {//Fonction login pour connecter des users e
       error: error 
     }));
 };
+
+exports.modifyUser = (req, res, next) => {
+  bcrypt.hash(req.body.password, 10)
+  .then(hash => {
+    User.update({
+      email: req.body.email,
+      pseudo: req.body.pseudo,
+      password: hash,
+      profil_picture: req.body.profil_picture,
+      is_admin: req.body.is_admin
+  },{
+    where: { id: req.params.id },
+    returning: true,//Option to tell Sequelize to return the post
+    plain: true//To return the post itself 
+  })
+  })
+    .then(() => res.status(200).json({ message: "Utilisateur modifié" }))
+    .catch(error => res.status(404).json(error));
+};
+
+exports.deleteUser = (req, res, next) => {console.log(req.params);
+  User.destroy({
+    where: {
+      id: req.params.id
+    }
+  })
+  .then(() => res.status(200).json({ message: "Utilisateur supprimé !" }))
+  .catch(error => res.status(404).json(error));
+}
+

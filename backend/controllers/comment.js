@@ -26,28 +26,25 @@ exports.getOneComment = (req, res, next) => {
     .catch(error => res.status(500).json({ error }));
 };
 
-//Find all comments
-/*exports.getAllComments = (req, res, next) => {
-  Comment.findAll({
-    order: [[ "created_at", "DESC" ]],
-    include: [
-    {model: db.post,
-      },{model: db.user
-      }]})
+// Modify a single Comment with an id
+exports.modifyComment = (req, res, next) => {
+  Comment.update({
+    content: req.body.content
+  }, {
+    where: { id: req.params.id },
+    returning: true,//Option to tell Sequelize to return the post
+    plain: true//To return the post itself 
+  })
+    .then(() => res.status(200).json({ message: "Commentaire modifié !" }))
+    .catch(error => res.status(404).json(error));
+};
 
-    .then(comments => { const resObj = comments.map(comment => {
-        //tidy up the user data
-      return Object.assign(
-        {},
-        {
-          comment_id: comment.id,
-          comment_content: comment.content,
-          comment_user: comment.user.pseudo,
-          comment_posts: comment.posts,
-          comment_creation_date: comment.created_at
-        })
-        
-    });
-    res.json(resObj) })
-
-};*/
+exports.deleteComment = (req, res, next) => {console.log(req.params.id);
+  Comment.destroy({
+    where: {
+      id: req.params.id
+    }
+  })
+    .then(() => res.status(200).json({ message: "Commentaire supprimé !" }))
+    .catch(error => res.status(404).json(error));
+}

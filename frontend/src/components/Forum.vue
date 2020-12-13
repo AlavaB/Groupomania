@@ -1,84 +1,99 @@
 <template>
     <b-container display="flex">
       <Header />
-        
+
         <b-row>
           <b-col offset-lg="2" lg="8">
-            <b-form-textarea id="textarea-rows" placeholder="Que voulez-vous dire ?" rows="1" class="mb-3">
+            <b-form-textarea id="textarea-rows" placeholder="Que voulez-vous dire ?" rows="1" class="mb-3 text-area" v-model="postTextArea">
             </b-form-textarea>
-            <div class="d-flex justify-content-end"><b-button pill size="sm" class="mb-3">Envoyer</b-button></div>
+            <div class="d-flex justify-content-end"><b-button pill size="sm" class="mb-3" @click="httpCreatePost">Envoyer</b-button></div>
           </b-col>
         </b-row>
         
-        <b-row v-for="post in posts" :key="post.id">
-          <b-col offset-lg="1" lg="1"><b-avatar size="4rem">{{ post.post_image }}</b-avatar></b-col>
-          <b-col lg="8" class="post mb-4">
-            <div class="post-header pr-2 pl-2 mb-3 font-weight-bolder">Publié par {{ post.post_user }} le {{ post.post_creation_date }}</div>
-            <div class="post-content pr-2 pl-2">{{ post.post_content }}</div>
-            <div class="mt-3 mb-3">
-                <b-button-group>
-                  <b-dropdown variant="outline-danger" size="sm" right text=". . .">
-                    <b-dropdown-item v-if="userId === post.post_user_id">Modifier</b-dropdown-item>
-                    <b-dropdown-item v-if="admin || userId === post.post_user_id">Supprimer</b-dropdown-item>
-                    <b-dropdown-item>Commenter</b-dropdown-item>
-                  </b-dropdown>
-                </b-button-group>
-            </div>
-              
-              <b-row v-for="comment in post.comments_data" :key="comment.id">
-                <b-col offset-lg="4" lg="8" class="comment mb-4">
-                  <div class="comment-header pr-2 pl-2 mb-3 font-weight-bolder">Commenté par {{ comment.pseudo }} le {{ comment.creation_date }}</div>
-                  <div class="comment-content pr-2 pl-2">{{ comment.content }}</div>
-                  <div class="mt-3 mb-3">
-                    <b-button-group class="d-flex justify-content-end">
-                      <b-dropdown class="dropdown-comment" variant="outline-danger" size="sm" right text=". . .">
-                      <b-dropdown-item v-if="userId === comment.user_id">Modifier</b-dropdown-item>
-                      <b-dropdown-item v-if="admin || userId === comment.user_id">Supprimer</b-dropdown-item>
-                      </b-dropdown>
-                    </b-button-group>
-                  </div>                
-                </b-col>
-              </b-row>
-          </b-col>
-        </b-row>
+      <b-row v-for="postData in posts" :key="postData.id">
+        <b-col>
+          <Post :post="postData" :admin="admin" :userId="userId" :token="token"></Post>
+        </b-col>
+      </b-row>
     </b-container>
 </template>
  
 <script>
-import Header from '../components/Header'
+import Header from './Header.vue';
+import Post from './Post.vue';
+
 
 export default {
   name: "Forum",
+  
   components: {
     Header,
+    Post,
   },
   data() {
     return {
       posts: [],
-      admin: JSON.parse(localStorage.getItem('currentUser')).admin,
-      userId: JSON.parse(localStorage.getItem('currentUser')).userId
+      token: "",
+      userId: "",
+      admin: false,
+      error: {},
+      postTextArea: "",
+      testKey: "",
     }
   },
 
-    created() {
-    //User is not authorized
-    if (!(localStorage.getItem('currentUser'))) {
-      this.$router.push('/login');
-    }
- 
+  created() {
+    this.httpGetUser()
   },
- 
+
   mounted() {
-    const headers = {Authorization: JSON.parse(localStorage.getItem('currentUser')).token,
-                    userId: JSON.parse(localStorage.getItem('currentUser')).userId}
-    //récupération des posts
+    this.httpGetPosts()
+  }, 
+
+  methods: {
+    httpCreatePost() {
+    const headers = {Authorization: this.token, userId: this.userId}
+    const body = {
+      content: this.postTextArea, 
+      user_id: this.userId
+    }
+    this.$http.post('http://localhost:3000/api/posts', body, { headers })
+      .then(res => { res, this.httpGetPosts () })
+      .catch(err => {      
+        console.log(err)})
+    },
+
+    httpGetUser () {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'))
+    if (currentUser){
+    this.token = currentUser.token
+    this.userId = currentUser.userId
+    const headers = {Authorization: this.token, userId: this.userId}
+    this.$http.get(`http://localhost:3000/api/users/${currentUser.userId}`, { headers })
+      .then(res => { this.admin = res.data.admin }) //Récupération si admin ou pas car pas noté dans local storage pour éviter de modifier dans devtools 
+      .catch(err => { this.$router.push('/login')
+      this.error = {
+        Title: "Un problème est survenu",
+        Message: err
+      }
+    })
+  } else {
+    this.$router.push('/login');
+  }
+  },
+    httpGetPosts () {
+    const headers = {Authorization: this.token, userId: this.userId}
     this.$http.get('http://localhost:3000/api/posts', { headers })
       .then(res => { this.posts = res.data})
-      .catch(err => { if (err){ 
-          this.$router.push('/login');
-          }})
-     },
-     
+      .catch(err => {      
+        this.error = {
+        Title: "Un problème est survenu",
+        Message: err
+      }})
+    },
+}
+ 
+    
 };
     //récupération des comments
     /*this.$http.get('http://localhost:3000/api/comments', { headers: {Authorization: localStorage.getItem('token')} })
@@ -97,11 +112,11 @@ export default {
 
 
 <style scoped>
-  #textarea-rows {
+  .text-area {
     resize: none;
     border: 1px solid#fd2d01;
   }
-  #textarea-rows:focus {
+  .text-area:focus {
     outline: none !important;
     border: 1px solid #fd2d01;
     box-shadow: 0 0 10px  #ffd7d7;
@@ -111,23 +126,11 @@ export default {
     padding-right: 0;
     padding-left: 0;
   }
-  .comment {
-    padding-left: 0;
-  }
+  
   .post-header {
     background-color:  #ffd7d7;
     font-size: 1em;
     border-radius: 80px 30px;
-    text-align: center;
-  }
-
-  .comment-header {
-    background-color:  #ffd7d7;
-    font-size: 1em;
-    border-radius: 80px 30px;
-    text-align: center;
-  }
-  .dropdown-comment {
     text-align: center;
   }
 

@@ -25,47 +25,81 @@ exports.getOnePost = (req, res, next) => {
     .then(data => { res.send(data) })
     .catch(error => res.status(500).json({ error }));
 };
-function comment(array){
+function comment(array) {
   allComments = [];
   for (let index = 0; index < array.length; index++) {
     const element = array[index];
-    commentFormat= {
+    commentFormat = {
+      id: element.id,
       content: element.content,
       pseudo: element.user.pseudo,
-      user_id: element.user.id,
-      creation_date: element.created_at
+      userId: element.user.id,
+      creationDate: element.created_at
     };
     allComments.push(commentFormat);
   }
   return allComments;
 }
+
+
+// Find all Posts 
 exports.getAllPosts = (req, res, next) => {
   Post.findAll({
-    order: [[ "created_at", "DESC" ]],
+    order: [["created_at", "DESC"]],
     include: [
-    {model: db.comment,include: [
-      {model: db.user
-    }]
-      },{model: db.user
-      }]})
+      {
+        model: db.comment, include: [
+          {
+            model: db.user
+          }]
+      }, {
+        model: db.user
+      }]
+  })
 
-    .then(posts => { const resObj = posts.map(post => {
+    .then(posts => {
+      const resObj = posts.map(post => {
         //tidy up the user data
-      return Object.assign(
-        {},
-        {
-          post_content: post.content,
-          post_user: post.user.pseudo,
-          post_user_id: post.user.id,
-          post_creation_date: post.created_at,
-          post_image: post.image,
-          comments_data: comment(post.comments)
-        })
-        
-    });
-    res.json(resObj) })
+        return Object.assign(
+          {},
+          {
+            id: post.id,
+            content: post.content,
+            user: post.user.pseudo,
+            userId: post.user.id,
+            creationDate: post.created_at,
+            image: post.image,
+            comments: comment(post.comments)
+          })
+
+      });
+      res.json(resObj)
+    })
 
 };
 
 
+exports.modifyPost = (req, res, next) => {
 
+  Post.update({
+    content: req.body.content,
+    image: req.body.image
+  }, {
+    where: { id: req.params.id },
+    returning: true,//Option to tell Sequelize to return the post
+    plain: true//To return the post itself 
+  })
+    .then(() => res.status(200).json({ message: "Post modifié !" }))
+    .catch(error => res.status(404).json(error));
+};
+
+exports.deletePost = (req, res, next) => {console.log(req.params.id);
+  Post.destroy({
+    where: {
+      id: req.params.id
+    }
+  })
+  
+  .then(() => res.status(200).json({ message: "Post supprimé !" }))
+  .catch(error => res.status(404).json(error));
+}
