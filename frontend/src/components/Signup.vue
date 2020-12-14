@@ -9,13 +9,19 @@
 
     <b-row align-h="center">
       <b-col lg="8">
-        
-        <b-card align="center" class="identification-box" title="Inscrivez-vous">
-          <b-col offset-lg="2" lg="8">
-            <b-form-input id="input-1" v-model="form.pseudo" required placeholder="Entrez votre pseudo"></b-form-input>
-            
-            <b-form-input class="mt-3" id="input-2" v-model="form.email" type="email" required placeholder="Entrez votre adresse email"></b-form-input>
-            <b-form-input class="mt-3" id="input-3" v-model="form.password" type="password" required placeholder="Entrez votre mot de passe"></b-form-input>
+          <b-card class="identification-box">
+            <b-card-title align="center">Inscrivez-vous</b-card-title>
+            <b-col offset-lg="2" lg="8">
+
+            <b-form class="mb-3 mt-4">
+                <label for="pseudo" class="mb-0" @keyup.enter="login">Pseudo *</label>
+                <b-form-input id="input-1" class="mb-3" v-model="form.pseudo" required placeholder="Entrez votre pseudo"></b-form-input>
+                <label for="email-adress" class="mb-0" @keyup.enter="login">Adresse email *</label>
+                <b-form-input id="input-2" class="mb-3" v-model="form.email" type="email" required placeholder="Entrez votre adresse email"></b-form-input>
+                <label for="password" class="mb-0" @keyup.enter="login">Mot de passe *</label>
+                <b-form-input id="input-3" class="mb-3" v-model="form.password" type="password" required placeholder="Entrez votre mot de passe"></b-form-input>
+            </b-form>
+           
             <p class="text-center pt-4 ">Déjà inscrit ? <router-link to="/login">Se connecter</router-link>
             <b-button class="ml-5 submit" type="signup" @click="onSubmit">S'inscrire</b-button></p> 
             {{ error }}
@@ -29,7 +35,7 @@
 
 
 <script>
-import axios from 'axios'
+import { url } from '../main'
 
 export default {
   name: "Signup",
@@ -47,34 +53,41 @@ export default {
       }
     },
     methods: {
-      onSubmit() {
-        let newUser = {
-          pseudo: this.form.pseudo,
-          email: this.form.email,
-          password: this.form.password
-        }
-        //event.preventDefault()
-        //if (this.formpesudo === )
-        if (this.form.email === '') {
-          this.error = "vous devez renseigner une adresse email";
-        }
-        else if (!this.regex.test(this.form.email))
-        {
-          this.error = "Vous devez renseigner une adresse email valide";
-        }
-        axios.post('http://localhost:3000/api/users', newUser)
-          .then(res => {
-            if (res.status === 200) {
-              localStorage.setItem('token', res.data.token);
-              this.$router.push('/');
-            }
-          }, err => {
-            this.error = err.response.data.title
+    onSubmit() {
+      let newUser = {
+        pseudo: this.form.pseudo,
+        email: this.form.email,
+        password: this.form.password,
+      };
+      //event.preventDefault()
+      //if (this.formpesudo === )
+      if (this.form.email === "") {
+        this.error = "vous devez renseigner une adresse email";
+      } else if (!this.regex.test(this.form.email)) {
+        this.error = "Vous devez renseigner une adresse email valide";
+      }
+      this.$http.post(url + "users", newUser).then(
+        (res) => {
+          if (res.status === 200) {
+            this.$http.post(url + "users/login", newUser)
+              .then((res) => {
+                if (res.status === 200) {
+                  localStorage.setItem("currentUser", JSON.stringify(res.data));
+                  this.$router.push("/");
+                }
+              })
+              .catch((err) => {
+                localStorage.clear();
+                this.error = err.response.data.title;
+              });
           }
-          )
-         
-      }        
-    }
+        },
+        (err) => {
+          this.error = err.response.data.title;
+        }
+      );
+    },
+  },
 }
 
 </script>

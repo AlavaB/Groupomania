@@ -118,7 +118,11 @@ exports.getOneUser = (req, res, next) => {
   User.findByPk(id)
     .then(user => { res.status(200).json({
       admin: user.is_admin,
-      userId: user.id
+      userId: user.id,
+      email: user.email,
+      pseudo: user.pseudo,
+      password: user.password,
+      profilePicture: user.profile_picture
     }) 
   })
     .catch(error => res.status(500).json({ error }));
@@ -148,8 +152,7 @@ exports.login = (req, res, next) => {//Fonction login pour connecter des users e
             userId: user.id,
             token: jwt.sign(
               { userId: user.id },
-              secret,
-              { expiresIn: "24h" }
+              secret
             )
           });
         })

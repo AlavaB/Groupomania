@@ -4,8 +4,8 @@ const Post = db.post;
 
 // Create and Save a new Post
 exports.createPost = (req, res, next) => {
-  // Create a Post
-  const post = {
+  
+  const post = {// Create a Post
     content: req.body.content,
     image: req.body.image,
     user_id: req.body.user_id,
@@ -46,12 +46,11 @@ function comment(array) {
 exports.getAllPosts = (req, res, next) => {
   Post.findAll({
     order: [["created_at", "DESC"]],
-    include: [
-      {
-        model: db.comment, include: [
-          {
-            model: db.user
-          }]
+    include: [{
+      model: db.comment, 
+      include: [{
+        model: db.user
+      }]
       }, {
         model: db.user
       }]
@@ -80,6 +79,7 @@ exports.getAllPosts = (req, res, next) => {
 
 
 exports.modifyPost = (req, res, next) => {
+  console.log(req.body)
 
   Post.update({
     content: req.body.content,

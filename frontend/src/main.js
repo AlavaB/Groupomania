@@ -8,6 +8,8 @@ import App from './App.vue'
 import router from './router'
 import Axios from 'axios'
 
+export const url = 'http://localhost:3000/api/'
+
 Vue.prototype.$http = Axios;
 
 Vue.use(BootstrapVue)
