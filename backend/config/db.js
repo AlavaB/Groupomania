@@ -1,12 +1,12 @@
 module.exports = {
-    //MySQL connection
+    //Connexion à MySQL
     HOST: "localhost",
     USER: "groupomania",
     PASSWORD: "knutR66t-st",
     DB: "groupomania",
     dialect: "mysql",
 
-    //Sequelize connection pool configuration
+    //Connection à Sequelize et configuration du pool 
     pool: {
       max: 5,
       min: 0,

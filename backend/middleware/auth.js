@@ -3,8 +3,8 @@ const { secret } = require('../config.json');
 
 module.exports = (req, res, next) => {
 	try {
-		const token = req.headers.authorization; //Récupération du token du header
-		const decodedToken = jwt.verify(token, secret); //Décodage du token
+		const token = req.headers.authorization; 
+		const decodedToken = jwt.verify(token, secret); 
 		const userId = decodedToken.userId;
 		if (req.headers.userid !== userId) {
 			throw "User ID non valable !";
@@ -13,8 +13,7 @@ module.exports = (req, res, next) => {
 		}
 	} catch {
 		res.status(401).json({
-			error: new Error("Invalid request!"),
-		})
-		;
+			error: new Error("Requête non valide"),
+		});
 	}
 };

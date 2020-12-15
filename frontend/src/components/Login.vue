@@ -38,19 +38,19 @@ export default {
   data() {
       return {
         form: {
-          email: 'emilieb@email.fr',
-          password: '456789',
+          email: 'emilie@email.fr',
+          password: '123456',
         },
         error: '',       
       }
   },
   methods: {
       login() {
-        let user = {
+        const user = {
           email: this.form.email,
           password: this.form.password
         }
-        this.$http.post(url+'users/login', user)
+        this.$http.post(url + 'users/login', user)
           .then(res => {
             if (res.status === 200) {
               localStorage.setItem('currentUser', JSON.stringify(res.data));
@@ -59,12 +59,11 @@ export default {
           })
           .catch(err => {
             localStorage.clear();
-            this.error = err.response.data.title
+            this.error = err.response.data.title//TODO erreur
           });  
       }
   }
 }
-
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

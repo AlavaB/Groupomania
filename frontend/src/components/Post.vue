@@ -9,48 +9,33 @@
             <b-form-textarea class="text-area" v-show="displayModifyPost" v-model="modifyTextArea">
             </b-form-textarea>
             
-            <div class="mt-3 mb-3">
-                <b-button-group v-show="!displayModifyPost">
+            <div class="mt-3 mb-3 d-flex justify-content-end">
+                <b-button-group v-show="displayDropdownButton">
                     <b-dropdown variant="outline-danger" size="sm" right text=". . .">
                     <b-dropdown-item v-if="userId === post.userId" @click="displaySwitch">Modifier</b-dropdown-item>
                     <b-dropdown-item v-if="admin || userId === post.userId" @click="deletePost">Supprimer</b-dropdown-item>
-                    <b-dropdown-item>Commenter</b-dropdown-item>
                     </b-dropdown>
                 </b-button-group>
                 <b-button pill size="sm" class="send-button" v-show="displayModifyPost" @click="modifyPost">Envoyer</b-button>
                 <b-button pill size="sm" class="reset-button" v-show="displayModifyPost" @click="resetModifyPost">Annuler</b-button>
-                <b-textarea v-model="commentTextArea"></b-textarea>
-                <b-button  @click="createComment">Envoyer</b-button>
-
-
             </div>
             </b-col>
         </b-row>
-
-        <b-row v-for="commentData in post.comments" :key="commentData.id">
-        <b-col>
-          <Comment :comment="commentData" :admin="admin" :userId="userId" :token="token"></Comment>
-        </b-col>
-      </b-row>
-
     </b-container>
 </template>          
 
 <script>
-import Comment from './Comment.vue';
 import { url } from '../main'
 
 
 export default {
   name: "Post",
-  components: {
-    Comment,
-  },
+
   data(){
     return {
       displayModifyPost : false,
+      displayDropdownButton: false,
       modifyTextArea: this.post.content,
-      commentTextArea: "",
       uri: 'posts/' + this.post.id,
       headers: {
         headers:  {
@@ -65,14 +50,6 @@ export default {
     body() {
       return { 
         content: this.modifyTextArea }
-    },
-    bodyComment() {
-      return {
-        userId: this.userId,
-        postId: this.post.id,
-        content: this.commentTextArea
-      }
-      
     }
   },
 
@@ -90,10 +67,20 @@ export default {
         type: Boolean
     }
   },
-  methods: {
-    parentGetPosts() {this.$parent.getPosts()},
+  created() {
+    this.switchDropdownButton()
+  },
 
-    displaySwitch() {this.displayModifyPost= !this.displayModifyPost},
+  methods: {
+    switchDropdownButton() {
+      if (this.admin === true || this.userId === this.post.userId) {
+        this.displayDropdownButton = !this.displayDropdownButton
+      }
+    },
+
+    displaySwitch() {
+      this.displayModifyPost= !this.displayModifyPost,
+      this.displayDropdownButton = !this.displayDropdownButton},
     
     getOnePost() {
       this.$http.get(url + 'posts/' + this.post.id, this.headers)
@@ -103,27 +90,20 @@ export default {
     deletePost() {
       this.$http.delete(url + this.uri, this.headers)
       .then(() => { 
-        this.parentGetPosts()
+        this.$parent.getPosts()
       })
     },
 
     modifyPost() { 
       this.$http.put(url+this.uri, this.body, this.headers)
       .then(() => { 
-        this.parentGetPosts();
+        this.$parent.getPosts();
         this.displaySwitch() 
       })
     },
     resetModifyPost() {
       this.getOnePost() 
       this.displaySwitch()         
-    },
-
-    createComment() {
-      console.log(this.bodyComment)
-      this.$http.post(url + 'comments', this.bodyComment)
-      .then(() => { console.log(this.post_id) })
-      .catch(err => { console.log(err)})
     },
   }
 };

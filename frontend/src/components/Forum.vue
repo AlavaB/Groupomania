@@ -55,7 +55,6 @@ export default {
         content: this.postTextArea, 
         user_id: this.userId }
     }
-
   },
   created() {
     this.getUser()
@@ -64,8 +63,6 @@ export default {
   mounted() {
     this.getPosts()
   }, 
-
-
 
   methods: {
     createPost() {
@@ -81,14 +78,15 @@ export default {
       .then(res => { this.posts = res.data} )
     },
 
+    //Validation du state de l'utilisateur
     getUser () {
       const currentUser = JSON.parse(localStorage.getItem('currentUser'));
       if (currentUser){
       this.token = currentUser.token
       this.userId = currentUser.userId
       this.$http.get(url + 'users/' + currentUser.userId, this.headers)
-        .then(res => { this.admin = res.data.admin }) //Récupération si admin ou pas car pas noté dans local storage pour éviter de modifier dans devtools 
-        .catch(() => { this.$router.push('/login')
+        .then(res => { this.admin = res.data.admin })
+        .catch(() => { this.$router.push('/login')//A voir avec Robin pourquoi on arrive quand même sur le forum vide !
       })
       } else {
         this.$router.push('/login');

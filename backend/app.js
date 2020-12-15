@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const jwt = require("jsonwebtoken");
+const path = require('path');
 
 const app = express();
 
@@ -16,19 +16,9 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/', (req, res) => {
-    res.json({ message: "Welcome to Emilie application." });
-  });
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 require('./routes/user')(app);
 require('./routes/post')(app);
-require('./routes/comment')(app);
-
-/*const posts = function(posts) {
-  this.content = posts.content;
-  this.image = posts.image;
-  this.user_id = posts.user_id;
-};
-console.log(posts.content);*/
 
 module.exports = app;

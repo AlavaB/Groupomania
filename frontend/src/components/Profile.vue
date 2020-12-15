@@ -1,7 +1,6 @@
 <template>
     <b-container>
         <Header />
-{{ user }}
         <b-row align-h="center">
             <b-col lg="8">
                 <b-card class="identification-box">

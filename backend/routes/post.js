@@ -3,13 +3,10 @@ module.exports = app => {
     const auth = require('../middleware/auth');
   
     const router = require('express').Router();
-    //const multer = require('../middleware/multer-config');
+    const multer = require('../middleware/multer-config');
   
-    //Create a new Post
-    router.post("/", auth, posts.createPost);
-  
-    //Get one Post
-    router.get("/:id", posts.getOnePost);
+    router.post("/", auth, multer, posts.createPost);
+    router.get("/:id", auth, posts.getOnePost);
     router.get("/", auth, posts.getAllPosts);
     router.put('/:id', auth, posts.modifyPost);
     router.delete('/:id', auth, posts.deletePost);

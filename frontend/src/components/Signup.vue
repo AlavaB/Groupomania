@@ -14,17 +14,17 @@
             <b-col offset-lg="2" lg="8">
 
             <b-form class="mb-3 mt-4">
-                <label for="pseudo" class="mb-0" @keyup.enter="login">Pseudo *</label>
+                <label for="pseudo" class="mb-0" @keyup.enter="signup">Pseudo *</label>
                 <b-form-input id="input-1" class="mb-3" v-model="form.pseudo" required placeholder="Entrez votre pseudo"></b-form-input>
-                <label for="email-adress" class="mb-0" @keyup.enter="login">Adresse email *</label>
+                <label for="email-adress" class="mb-0" @keyup.enter="signup">Adresse email *</label>
                 <b-form-input id="input-2" class="mb-3" v-model="form.email" type="email" required placeholder="Entrez votre adresse email"></b-form-input>
-                <label for="password" class="mb-0" @keyup.enter="login">Mot de passe *</label>
+                <label for="password" class="mb-0" @keyup.enter="signup">Mot de passe *</label>
                 <b-form-input id="input-3" class="mb-3" v-model="form.password" type="password" required placeholder="Entrez votre mot de passe"></b-form-input>
             </b-form>
            
             <p class="text-center pt-4 ">Déjà inscrit ? <router-link to="/login">Se connecter</router-link>
-            <b-button pill class="ml-5 submit" type="signup" @click="onSubmit">S'inscrire</b-button></p> 
-            {{ error }}
+            <b-button pill class="ml-5 submit" type="signup" @click="signup">S'inscrire</b-button></p> 
+            {{ error }}<!--TODO mise en forme-->
           </b-col>
         </b-card>
         
@@ -53,42 +53,40 @@ export default {
       }
     },
     methods: {
-    onSubmit() {
+    signup() {
       let newUser = {
         pseudo: this.form.pseudo,
         email: this.form.email,
         password: this.form.password,
       };
-      //event.preventDefault()
-      //if (this.formpesudo === )
       if (this.form.email === "") {
-        this.error = "vous devez renseigner une adresse email";
+        return this.error = "vous devez renseigner une adresse email";
       } else if (!this.regex.test(this.form.email)) {
-        this.error = "Vous devez renseigner une adresse email valide";
+        return this.error = "Vous devez renseigner une adresse email valide";
+      } else if (this.form.pseudo === "") {//TODO pseudo unicité + mot de passe complexité
+        return this.error = "Vous devez renseigner un pseudo";
       }
-      this.$http.post(url + "users", newUser).then(
-        (res) => {
+      this.$http.post(url + "users", newUser)
+        .then(res => {
           if (res.status === 200) {
             this.$http.post(url + "users/login", newUser)
               .then((res) => {
                 if (res.status === 200) {
-                  localStorage.setItem("currentUser", JSON.stringify(res.data));
+                  localStorage.setItem('currentUser', JSON.stringify(res.data));
                   this.$router.push("/");
                 }
               })
-              .catch((err) => {
+              .catch(err => {
                 localStorage.clear();
-                this.error = err.response.data.title;
+                this.error = err.response.data.title;//TODO erreur
               });
           }
         },
         (err) => {
-          this.error = err.response.data.title;
+          this.error = err.response.data.title;//TODO erreur
         }
-      );
-    },
-  },
-}
+    )}}
+};
 
 </script>
 

@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.UUID, allowNull: false, defaultValue: DataTypes.UUIDV4, primaryKey: true, unique: true//UUID = unique user identifier, généré par Sequelize automatiquement
         },
         content: {
-            type: DataTypes.STRING, allowNull: true
+            type: DataTypes.STRING(2047), allowNull: true
         },
         image: {
             type: DataTypes.STRING, allowNull: true
@@ -24,16 +24,14 @@ module.exports = (sequelize, DataTypes) => {
                 return moment(this.getDataValue('created_at')).format('DD/MM/YYYY HH:mm:ss');
             },
             allowNull: true
-          },
-          updated_at: {
+        },
+        updated_at: {
             type: DataTypes.DATE,
             allowNull: true
-          },
-        
+        },
     }, {
         underscored: true
     });
-
     return Post;
 };
 
