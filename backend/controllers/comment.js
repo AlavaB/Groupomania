@@ -1,4 +1,5 @@
 const db = require('../models');
+const user = require('../models/user');
 const Comment = db.comment;
 
 // Create and Save a new Comment
@@ -7,13 +8,13 @@ exports.createComment = (req, res, next) => {
   // Create a Comment
   const comment = {
     content: req.body.content,
-    post_id: req.body.post_id,
-    user_id: req.body.user_id
+    post_id: req.body.postId,
+    user_id: req.body.userId
   };
   //Save Comment in database
   Comment.create(comment)
     .then(data => { res.send(data) })
-    .catch(error => res.status(500).json({ error }));
+    .catch(error => console.log(error) );//res.status(500).json({ error }
 };
 
 

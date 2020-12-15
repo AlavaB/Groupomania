@@ -17,7 +17,12 @@
                     <b-dropdown-item>Commenter</b-dropdown-item>
                     </b-dropdown>
                 </b-button-group>
-                <b-button v-show="displayModifyPost" @click="modifyPost">Envoyer</b-button>
+                <b-button pill size="sm" class="send-button" v-show="displayModifyPost" @click="modifyPost">Envoyer</b-button>
+                <b-button pill size="sm" class="reset-button" v-show="displayModifyPost" @click="resetModifyPost">Annuler</b-button>
+                <b-textarea v-model="commentTextArea"></b-textarea>
+                <b-button  @click="createComment">Envoyer</b-button>
+
+
             </div>
             </b-col>
         </b-row>
@@ -45,6 +50,7 @@ export default {
     return {
       displayModifyPost : false,
       modifyTextArea: this.post.content,
+      commentTextArea: "",
       uri: 'posts/' + this.post.id,
       headers: {
         headers:  {
@@ -57,7 +63,16 @@ export default {
 
   computed: {
     body() {
-      return { content: this.modifyTextArea }
+      return { 
+        content: this.modifyTextArea }
+    },
+    bodyComment() {
+      return {
+        userId: this.userId,
+        postId: this.post.id,
+        content: this.commentTextArea
+      }
+      
     }
   },
 
@@ -80,8 +95,13 @@ export default {
 
     displaySwitch() {this.displayModifyPost= !this.displayModifyPost},
     
+    getOnePost() {
+      this.$http.get(url + 'posts/' + this.post.id, this.headers)
+      .then(res => { this.modifyTextArea = res.data.content })
+    },
+
     deletePost() {
-      this.$http.delete(url+this.uri, this.headers)
+      this.$http.delete(url + this.uri, this.headers)
       .then(() => { 
         this.parentGetPosts()
       })
@@ -92,10 +112,20 @@ export default {
       .then(() => { 
         this.parentGetPosts();
         this.displaySwitch() 
-      })},
-  }
+      })
+    },
+    resetModifyPost() {
+      this.getOnePost() 
+      this.displaySwitch()         
+    },
 
-  
+    createComment() {
+      console.log(this.bodyComment)
+      this.$http.post(url + 'comments', this.bodyComment)
+      .then(() => { console.log(this.post_id) })
+      .catch(err => { console.log(err)})
+    },
+  }
 };
 </script>
 
@@ -119,5 +149,14 @@ export default {
     outline: none !important;
     border: 1px solid #fd2d01;
     box-shadow: 0 0 10px  #ffd7d7;
+  }
+  .send-button {
+    background-color:#85e085;
+    border: none;
+    color: black;
+  }
+  .reset-button {
+    background-color:#fe5634;
+    border: none;
   }
 </style>

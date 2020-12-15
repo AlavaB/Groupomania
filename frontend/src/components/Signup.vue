@@ -23,7 +23,7 @@
             </b-form>
            
             <p class="text-center pt-4 ">Déjà inscrit ? <router-link to="/login">Se connecter</router-link>
-            <b-button class="ml-5 submit" type="signup" @click="onSubmit">S'inscrire</b-button></p> 
+            <b-button pill class="ml-5 submit" type="signup" @click="onSubmit">S'inscrire</b-button></p> 
             {{ error }}
           </b-col>
         </b-card>
@@ -97,8 +97,10 @@ export default {
         background-color: #ffd7d7;
     }
     .submit {
-      background-color: #b2bec3;
+      background-color: #85e085;
       border: none;
+      color: black;
+
     }
     h1 {
       font-size: 1.5em;

@@ -18,7 +18,8 @@
                             </b-button-group>
                         </div>
                     
-                    <b-button v-show="displayModifyComment" @click="modifyComment">Envoyer</b-button>
+                    <b-button pill size="sm" class="send-button" v-show="displayModifyComment" @click="modifyComment">Envoyer</b-button>
+                    <b-button pill size="sm" class="reset-button" v-show="displayModifyComment" @click="resetModifyComment">Annuler</b-button>
 
                     </div>                
                 </b-col>
@@ -85,6 +86,10 @@ export default {
       this.displaySwitch()
        })
     },
+    resetModifyComment() {
+      this.displaySwitch() 
+      
+    }
   }
 }
 </script>
@@ -113,5 +118,14 @@ export default {
     outline: none !important;
     border: 1px solid #fd2d01;
     box-shadow: 0 0 10px  #ffd7d7;
+  }
+  .send-button {
+    background-color:#85e085;
+    border: none;
+    color: black;
+  }
+  .reset-button {
+    background-color:#fe8067;
+    border: none;
   }
 </style>

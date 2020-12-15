@@ -22,6 +22,7 @@ db.user = require('./user')(sequelize, Sequelize);
 db.post = require('./post')(sequelize, Sequelize);
 db.comment = require('./comment')(sequelize, Sequelize);
 
+//Liaison entre tables
 db.comment.belongsTo(db.post);
 db.comment.belongsTo(db.user);
 db.post.hasMany(db.comment);

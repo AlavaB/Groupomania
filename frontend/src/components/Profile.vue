@@ -19,6 +19,8 @@
                             <b-form-input id="input-4" class="mb-3" v-model="form.password" type="password" placeholder="Mon mot de passe">
                                 </b-form-input>
                             <b-button @click="httpModifyUser">Modifier</b-button>
+                            <b-button @click="httpModifyUser">Supprimer</b-button>
+
                     </b-col>
         </b-card>
       
@@ -36,49 +38,49 @@ export default {
     components: {
         Header,
     },
-        data() {
-            return {
-                form: {
-                    email: '',
-                    pseudo: '',
-                    password: '',
-                    imageProfile: ''
-                    }, 
-                user: {},
-                token: '',
-                userId: ''
-            }
-        },
-            created(){
-                this.httpGetUser()
-            },
+    data() {
+        return {
+            form: {
+                email: '',
+                pseudo: '',
+                password: '',
+                imageProfile: ''
+                }, 
+            user: {},
+            token: '',
+            userId: ''
+        }
+    },
+    created(){
+        this.httpGetUser()
+    },
     methods: {
         httpGetUser() {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'))
-        if (currentUser){
-        this.token = currentUser.token
-        this.userId = currentUser.userId
+        if (currentUser) {
+            this.token = currentUser.token
+            this.userId = currentUser.userId
+            const headers = {Authorization: this.token, userId: this.userId}
+            this.$http.get(`http://localhost:3000/api/users/${currentUser.userId}`, { headers })
+                .then(res => { this.user = res.data }) 
+                .catch(err => { 
+                    this.error = {
+                        Title: "Un problème est survenu",
+                        Message: err
+                    }
+                })
+            } 
+        },
+        httpModifyUser() {
         const headers = {Authorization: this.token, userId: this.userId}
-        this.$http.get(`http://localhost:3000/api/users/${currentUser.userId}`, { headers })
-        .then(res => { this.user = res.data }) 
-        .catch(err => { 
-        this.error = {
-            Title: "Un problème est survenu",
-            Message: err
-        }
-        })
-        } 
-  },
-  httpModifyUser() {
-    const headers = {Authorization: this.token, userId: this.userId}
-    this.$http.put(`http://localhost:3000/api/users/${this.post.id}`, { headers })
-      .then(() => { this.$parent.httpGetUsers() })
-      .catch(err => {      
-        this.error = {
-        Title: "Un problème est survenu",
-        Message: err
-      }})
-    },
+        this.$http.put(`http://localhost:3000/api/users/${this.post.id}`, { headers })
+            .then(() => { this.$parent.httpGetUsers() })
+            .catch(err => {      
+                this.error = {
+                Title: "Un problème est survenu",
+                Message: err
+            }})
+        },
     }
 
 };

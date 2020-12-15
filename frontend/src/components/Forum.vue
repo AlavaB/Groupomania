@@ -6,7 +6,9 @@
           <b-col offset-lg="2" lg="8">
             <b-form-textarea id="textarea-rows" placeholder="Que voulez-vous dire ?" rows="1" class="mb-3 text-area" v-model="postTextArea">
             </b-form-textarea>
-            <div class="d-flex justify-content-end"><b-button pill size="sm" class="mb-3" @click="createPost">Envoyer</b-button></div>
+            <div class="d-flex justify-content-end">
+              <b-button pill size="sm" class="mb-3 send-button" @click="createPost">Envoyer</b-button>
+              <b-button pill size="sm" class="mb-3 reset-button" @click="resetPost">Annuler</b-button></div>
           </b-col>
         </b-row>
         
@@ -52,9 +54,9 @@ export default {
       return { 
         content: this.postTextArea, 
         user_id: this.userId }
-    },
-  },
+    }
 
+  },
   created() {
     this.getUser()
   },
@@ -63,17 +65,20 @@ export default {
     this.getPosts()
   }, 
 
+
+
   methods: {
     createPost() {
-      this.$http.post(url+'posts', this.body, this.headers)
+      this.$http.post(url + 'posts', this.body, this.headers)
       .then(() => {
-        this.httpGetPosts()
+      this.getPosts()
+      this.resetPost()
       })
     },
 
     getPosts() {
-       this.$http.get(url+'posts', this.headers)
-      .then( res => { this.posts = res.data} )
+       this.$http.get(url + 'posts', this.headers)
+      .then(res => { this.posts = res.data} )
     },
 
     getUser () {
@@ -88,7 +93,12 @@ export default {
       } else {
         this.$router.push('/login');
       }
+      
     },
+    resetPost() {
+      this.postTextArea = '';
+      
+    }
 }   
 };
 
@@ -111,12 +121,20 @@ export default {
     padding-right: 0;
     padding-left: 0;
   }
-  
   .post-header {
     background-color:  #ffd7d7;
     font-size: 1em;
     border-radius: 80px 30px;
     text-align: center;
   }
+  .send-button {
+    background-color:#85e085;
+    border: none;
+    color: black;
 
+  }
+  .reset-button {
+    background-color:#fe5634;
+    border: none;
+  }
 </style>

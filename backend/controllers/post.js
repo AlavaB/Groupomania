@@ -20,11 +20,11 @@ exports.createPost = (req, res, next) => {
 // Find a single Post with an id
 exports.getOnePost = (req, res, next) => {
   const id = req.params.id;
-
   Post.findByPk(id)
     .then(data => { res.send(data) })
     .catch(error => res.status(500).json({ error }));
 };
+
 function comment(array) {
   allComments = [];
   for (let index = 0; index < array.length; index++) {
@@ -57,7 +57,7 @@ exports.getAllPosts = (req, res, next) => {
   })
 
     .then(posts => {
-      const resObj = posts.map(post => {
+      const resObj = posts.map(post => {//Création d'un tableau
         //tidy up the user data
         return Object.assign(
           {},
@@ -79,7 +79,6 @@ exports.getAllPosts = (req, res, next) => {
 
 
 exports.modifyPost = (req, res, next) => {
-  console.log(req.body)
 
   Post.update({
     content: req.body.content,
