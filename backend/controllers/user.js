@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const db = require('../models');
 const User = db.user;
 const { secret } = require('../config.json');
+const { oldEmployesPassword } = require('../config.json');
 
 //Création d'un utilisateur
 exports.createUser = (req, res, next) => {
@@ -68,7 +69,8 @@ exports.login = (req, res, next) => {
             userId: user.id,
             token: jwt.sign(
               { userId: user.id },
-              secret
+              secret,
+              {expiresIn: "24h"}
             )
           });
         })
@@ -79,31 +81,40 @@ exports.login = (req, res, next) => {
 
 //Modification d'un utilisateur
 exports.modifyUser = (req, res, next) => {
-  bcrypt.hash(req.body.password, 10)
-  .then(hash => {
+  let password
+  if (req.body.password){
+    bcrypt.hash(req.body.password, 10)
+  .then(hash => {password = hash;})
+  }
     User.update({
       email: req.body.email,
       pseudo: req.body.pseudo,
-      password: hash,
-      profil_picture: req.body.profil_picture,
+      password,
+      profil_picture: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
       is_admin: req.body.is_admin
   }, {
     where: { id: req.params.id },
     returning: true,
     plain: true
   })
-  })
     .then(() => res.status(200).json({ message: "Utilisateur modifié" }))
     .catch(err => res.status(404).json({ err }));
 };
 
 //Suppression d'un utilisateur
-exports.deleteUser = (req, res, next) => {console.log(req.params);
-  User.destroy({
-    where: {
-      id: req.params.id
-    }
-  })
+exports.deleteUser = (req, res, next) => {
+  User.update({
+    email: 'ancien employé' + Date.now(),
+    pseudo: 'ancien employé',
+    password: oldEmployesPassword,
+    profil_picture: "http://localhost:3000/api/images/avatar.png",
+    is_admin: 0
+}, {
+  where: { id: req.params.id },
+  returning: true,
+  plain: true
+})
+
   .then(() => res.status(200).json({ message: "Utilisateur supprimé !" }))
   .catch(err => res.status(404).json({ err }));
 };

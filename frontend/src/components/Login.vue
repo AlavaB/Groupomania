@@ -21,8 +21,8 @@
             </b-form>
             
             <p class="text-center pt-4 ">Pas de compte ? <router-link to="/signup">S'inscrire</router-link>
-            <b-button pill class="ml-5 submit-form" type="submit" @click="login">Se connecter</b-button></p> 
-            {{ error }}
+            <b-button pill class="ml-5" type="submit" @click="login">Se connecter</b-button></p> 
+            {{ error }}<!--TODO mise en forme-->
           </b-col>
         </b-card>
       </b-col>
@@ -70,11 +70,6 @@ export default {
 <style scoped>
   .identification-box {
       background-color: #ffd7d7;
-    }
-    .submit-form {
-      background-color: #85e085;
-      border: none;
-      color: black;
     }
     h1 {
       font-size: 1.5em;

@@ -5,9 +5,11 @@ const Post = db.post;
 exports.createPost = (req, res, next) => {
   const post = {
     content: req.body.content,
-    image: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
     user_id: req.body.user_id,
   };
+  if (req.file) {
+    post.image = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
+  }
   Post.create(post)
     .then(data => { res.send(data) })
     .catch(err => res.status(500).json({ err }));
@@ -50,7 +52,7 @@ exports.getAllPosts = (req, res, next) => {
 exports.modifyPost = (req, res, next) => {
   Post.update({
     content: req.body.content,
-    image: req.body.image
+    image: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
   },
     {
       where: { id: req.params.id },

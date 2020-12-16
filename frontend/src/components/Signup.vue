@@ -21,10 +21,10 @@
                 <label for="password" class="mb-0" @keyup.enter="signup">Mot de passe *</label>
                 <b-form-input id="input-3" class="mb-3" v-model="form.password" type="password" required placeholder="Entrez votre mot de passe"></b-form-input>
             </b-form>
-           
+            <p class="error-message font-weight-bold text-center">{{ error }}</p><!--TODO mise en forme-->
             <p class="text-center pt-4 ">Déjà inscrit ? <router-link to="/login">Se connecter</router-link>
             <b-button pill class="ml-5 submit" type="signup" @click="signup">S'inscrire</b-button></p> 
-            {{ error }}<!--TODO mise en forme-->
+            
           </b-col>
         </b-card>
         
@@ -60,12 +60,14 @@ export default {
         password: this.form.password,
       };
       if (this.form.email === "") {
-        return this.error = "vous devez renseigner une adresse email";
+        return this.error = "Vous devez renseigner une adresse email";
       } else if (!this.regex.test(this.form.email)) {
         return this.error = "Vous devez renseigner une adresse email valide";
       } else if (this.form.pseudo === "") {//TODO pseudo unicité + mot de passe complexité
         return this.error = "Vous devez renseigner un pseudo";
-      }
+      } else if (this.form.password === "") {
+        return this.error = "Vous devez renseigner un mot de passe";
+      } 
       this.$http.post(url + "users", newUser)
         .then(res => {
           if (res.status === 200) {
@@ -98,12 +100,14 @@ export default {
       background-color: #85e085;
       border: none;
       color: black;
-
     }
     h1 {
       font-size: 1.5em;
     }
-  .icon-name {
+    .icon-name {
       height: 250px;
+    }
+    .error-message {
+      color: #fd2d01;
     }
 </style>
