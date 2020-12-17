@@ -8,8 +8,9 @@
           </b-form-textarea>
           <div class="d-flex justify-content-end">
             <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
-            <b-button pill size="sm" class="mb-3 mr-3 send-button" @click="createPost">Envoyer</b-button>
-            <b-button pill size="sm" class="mb-3 reset-button" @click="resetPost">Annuler</b-button></div>
+            <b-button pill size="sm" class="mb-3 mr-3 reset-button" @click="resetPost">Annuler</b-button>
+            <b-button pill size="sm" class="mb-3 send-button" @click="createPost">Envoyer</b-button>
+          </div>
         </b-col>
       </b-row>
         
@@ -39,7 +40,8 @@ export default {
   
   data() {
     return {
-      displayProfile : false,
+      displayCommands: false,
+      displayProfile: false,
       posts: [],
       users: [],
       token: "",
@@ -84,7 +86,8 @@ export default {
 
     getPosts() {
       this.$http.get(url + 'posts', this.headers)
-      .then(res => { this.posts = res.data} )
+      .then(res => { 
+        this.posts = res.data })
     },
 
     switchDisplayProfile(data) {
@@ -139,7 +142,9 @@ export default {
     text-align: center;
   }
   .reset-button {
-    background-color:#fe5634;
-    border: none;
+    background-color: transparent;
+    border: solid 1px #fd2d01;
+    color: black;
   }
+
 </style>

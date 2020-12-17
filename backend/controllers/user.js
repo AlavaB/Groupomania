@@ -32,23 +32,6 @@ exports.createUser = (req, res, next) => {
     .catch(err => res.status(500).json({ err }));
 };
 
-
-// Récupérer un utilisateur
-exports.getOneUser = (req, res, next) => {
-  const id = req.params.id;
-  User.findByPk(id)
-    .then(user => { res.status(200).json({
-      admin: user.is_admin,
-      userId: user.id,
-      email: user.email,
-      pseudo: user.pseudo,
-      password: user.password,
-      profilePicture: user.profile_picture
-    }) 
-  })
-    .catch(err => res.status(500).json({ err }));
-};
-
 //Connexion d'un utilisateur existant
 exports.login = (req, res, next) => {
   User.findOne({ where: { email: req.body.email } })
@@ -79,20 +62,40 @@ exports.login = (req, res, next) => {
     .catch(err => res.status(500).json({ err }));
 };
 
+// Récupérer un utilisateur
+exports.getOneUser = (req, res, next) => {
+  const id = req.params.id;
+  User.findByPk(id)
+    .then(user => { res.status(200).json({
+      admin: user.is_admin,
+      profilePicture: user.profil_picture,
+      userId: user.id,
+      email: user.email,
+      pseudo: user.pseudo,      
+    }) 
+  })
+    .catch(err => res.status(500).json({ err }));
+};
+
 //Modification d'un utilisateur
 exports.modifyUser = (req, res, next) => {
+  
   let password
   if (req.body.password){
     bcrypt.hash(req.body.password, 10)
   .then(hash => {password = hash;})
   }
-    User.update({
-      email: req.body.email,
-      pseudo: req.body.pseudo,
-      password,
-      profil_picture: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
-      is_admin: req.body.is_admin
-  }, {
+  const user = {
+    email: req.body.email,
+    pseudo: req.body.pseudo,
+    password,
+    is_admin: req.body.is_admin,
+  }
+  if (req.file) {
+    user.profil_picture = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
+  }
+  console.log(user)
+    User.update(user, {
     where: { id: req.params.id },
     returning: true,
     plain: true
@@ -107,7 +110,7 @@ exports.deleteUser = (req, res, next) => {
     email: 'ancien employé' + Date.now(),
     pseudo: 'ancien employé',
     password: oldEmployesPassword,
-    profil_picture: "http://localhost:3000/api/images/avatar.png",
+    profil_picture: "http://localhost:3000/images/avatar.png",
     is_admin: 0
 }, {
   where: { id: req.params.id },

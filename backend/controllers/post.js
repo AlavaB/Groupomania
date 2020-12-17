@@ -38,6 +38,7 @@ exports.getAllPosts = (req, res, next) => {
             id: post.id,
             content: post.content,
             user: post.user.pseudo,
+            userProfilePicture: post.user.profil_picture,
             userId: post.user.id,
             creationDate: post.created_at,
             image: post.image,
@@ -50,10 +51,13 @@ exports.getAllPosts = (req, res, next) => {
 
 //Modification d'un post
 exports.modifyPost = (req, res, next) => {
-  Post.update({
+  const post = {
     content: req.body.content,
-    image: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
-  },
+  };
+  if (req.file) {
+    post.image = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
+  }
+  Post.update(post,
     {
       where: { id: req.params.id },
       returning: true,//Option Sequelize qui permet de retourner le post

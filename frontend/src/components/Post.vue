@@ -1,7 +1,7 @@
 <template>
     <b-container>
         <b-row>
-          <b-col offset-lg="1" lg="1"><b-avatar :src="require('../assets/images/avatar.png')" size="3rem"></b-avatar></b-col>
+          <b-col offset-lg="1" lg="1"><b-avatar :src="userProfilePicture" size="3rem"></b-avatar></b-col>
           <b-col lg="8" class="post mb-4">
             <div class="post-header pr-2 pl-2 mb-3 font-weight-bolder">Publié par {{ post.user }} le {{ post.creationDate }}</div>
               <b-row >
@@ -10,8 +10,8 @@
                   <b-form-textarea class="text-area" v-show="displayModifyPost" v-model="modifyTextArea">
                   </b-form-textarea>
                   <input v-show="displayModifyPost" type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
-                  <b-button pill size="sm" v-show="displayModifyPost" @click="modifyPost">Envoyer</b-button>
-                  <b-button pill size="sm" class="ml-3 reset-button" v-show="displayModifyPost" @click="resetModifyPost">Annuler</b-button>
+                  <b-button pill size="sm" class="ml-3" v-show="displayModifyPost" @click="resetModifyPost">Annuler</b-button>
+                  <b-button pill size="sm" class="send-button" v-show="displayModifyPost" @click="modifyPost">Envoyer</b-button>
                 </b-col>
                 <b-col lg="1">
                   <div class="d-flex justify-content-end">
@@ -40,6 +40,7 @@ export default {
       displayModifyPost : false,
       displayDropdownButton: false,
       modifyTextArea: this.post.content,
+      userProfilePicture: this.post.userProfilePicture,
       uri: 'posts/' + this.post.id,
       file: "",
       headers: {
@@ -149,7 +150,7 @@ export default {
     border: 1px solid #fd2d01;
     box-shadow: 0 0 10px  #ffd7d7;
   }
-  .reset-button {
+  .send-button {
     background-color:#fe5634;
     border: none;
   }

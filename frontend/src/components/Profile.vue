@@ -6,12 +6,11 @@
                     <b-card-title align="center" class="mb-5">Mon profil</b-card-title>
                     <b-col offset-lg="2" lg="8">
                         <div align="center">
-                            <label for="profile-picture">Photo de profil</label>
-                            <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
-                            <b-avatar class="mb-3" v-show="!displayImage" v-model="user.imageProfile" :src="require('../assets/images/avatar.png')" size="5rem"></b-avatar><br> 
-                        </div>
-                                                 
-                        <label for="pseudo" >Pseudo</label>
+                            <b-avatar class="mb-3" v-model="user.imageProfile" :src="user.profilePicture" size="5rem"></b-avatar><br> 
+                            <b-button pill size="sm" class="modify">Modifier ma photo de profil</b-button>
+                            <input class="mb-3" type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
+                        </div>             
+                        <label for="pseudo">Pseudo</label>
                         <b-form-input id="input-1" class="mb-3" v-model="user.pseudo" placeholder="Mon pseudo" >
                         </b-form-input>                    
                         
@@ -19,13 +18,14 @@
                         <b-form-input id="input-2" class="mb-3" v-model="user.email" type="email" placeholder="Mon adresse email">
                         </b-form-input>
                         
-                        <label for="password" >Mot de passe</label>
+                        <label for="password" >Mot de passe</label><br>
+                        <b-button pill size="sm" class="modify">Modifier mon mot de passe</b-button>
                         <b-form-input id="input-3" class="mb-5" v-model="password" type="password" placeholder="Tapez votre nouveau mot de passe">
                             
                         </b-form-input>
                         <div align="center">
                             <b-button pill @click="modifyUser">Modifier</b-button>
-                            <b-button pill class="ml-3 deleteButton " @click="deleteUser">Supprimer</b-button>
+                            <b-button pill size="sm" class="ml-3 deleteButton " @click="deleteUser">Supprimer</b-button>
                         </div>
                         
                     </b-col>
@@ -44,7 +44,6 @@ export default {
         return {
             password: '',
             user: {},
-            displayImage: true,
             uri: 'users/' + this.userId,
             file: "",
             headers: {
@@ -91,8 +90,8 @@ export default {
             this.file = this.$refs.file.files[0];
             },
         switchDisplayProfile() {
-            this.displayProfile = !this.displayProfile;
-            this.$emit('display-profile', this.displayProfile)
+            let emitDisplayProfile = !this.displayProfile;
+            this.$emit('display-profile', emitDisplayProfile)
         },
         getUser() {
             this.$http.get(url + 'users/' + this.userId, this.headers)
@@ -109,6 +108,7 @@ export default {
             formData.append('password', this.body.password);}
             this.$http.put(url + this.uri, formData, this.headers)
             .then(() => { 
+                this.$parent.getPosts();
                 this.switchDisplayProfile();
                 this.$refs.file.value = '' })
             .catch(err => { console.log(err) })
@@ -132,9 +132,15 @@ export default {
     .identification-box {
         background-color: #ffd7d7;
     }
-
     .deleteButton {
-        background-color:#fe5634;
-        border: none;
+        background-color: transparent;
+        border: solid 1px #fd2d01;
+        color: black;
     }
+    .modify {
+        background-color: white;
+        border: none;
+        color: black;
+    }
+
 </style>

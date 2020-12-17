@@ -1,7 +1,7 @@
 <template>
   <b-container class="mb-4"> 
     <b-navbar class="pt-3" toggleable="lg" type="light">
-      <b-navbar-brand href="#">
+      <b-navbar-brand @click="disableDisplayProfile" href="#">
         <router-link to="/"><!--TODO-->
           <img class="logo" src="../assets/images/icon-header.png" alt="Logo and company name"/>
         </router-link>
@@ -29,8 +29,11 @@ export default {
   },
   methods: {
     switchDisplayProfile() {
-      this.displayProfile = !this.displayProfile;
-      this.$emit('display-profile', this.displayProfile)
+      let emitDisplayProfile = !this.displayProfile;
+      this.$emit('display-profile', emitDisplayProfile)
+    },
+    disableDisplayProfile() {
+      this.$emit('display-profile', false)
     },
     logout() {
       localStorage.clear();
