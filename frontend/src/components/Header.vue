@@ -33,7 +33,7 @@ export default {
       this.$emit('display-profile', emitDisplayProfile)
     },
     disableDisplayProfile() {
-      this.$emit('display-profile', false)
+      this.$emit('display-profile', false);
     },
     logout() {
       localStorage.clear();

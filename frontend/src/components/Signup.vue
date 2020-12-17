@@ -58,6 +58,7 @@ export default {
         pseudo: this.form.pseudo,
         email: this.form.email,
         password: this.form.password,
+        profil_picture: url.substring(0, url.length-4) + "images/avatar.png"
       };
       if (this.form.email === "") {
         return this.error = "Vous devez renseigner une adresse email";

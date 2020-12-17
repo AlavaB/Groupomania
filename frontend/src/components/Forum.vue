@@ -1,24 +1,37 @@
 <template>
     <b-container display="flex">
+      
       <Header @display-profile="switchDisplayProfile" :displayProfile="displayProfile"/>
       <Profile @display-profile="switchDisplayProfile" v-show="displayProfile" :userId="userId" :token="token" :displayProfile="displayProfile"></Profile>
+      
+      
       <b-row v-show="!displayProfile">
-        <b-col offset-lg="2" lg="8">
-          <b-form-textarea id="textarea-rows" placeholder="Que voulez-vous dire ?" rows="1" class="mb-3 text-area" v-model="postTextArea">
-          </b-form-textarea>
-          <div class="d-flex justify-content-end">
-            <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
-            <b-button pill size="sm" class="mb-3 mr-3 reset-button" @click="resetPost">Annuler</b-button>
-            <b-button pill size="sm" class="mb-3 send-button" @click="createPost">Envoyer</b-button>
-          </div>
-        </b-col>
-      </b-row>
         
+        <b-col offset="1" lg="1">
+        <div class="base-image-input" :style="{ 'background-image': `url(${imageData})` }" @click="chooseImage">
+                <span v-if="!imageData" class="placeholder">Insérer une image</span>
+                <input class="file-input" ref="file" type="file" @input="onSelectFile">
+              </div>
+          </b-col>
+          <b-col lg="8">
+          <b-form-textarea id="textarea-rows" placeholder="Que voulez-vous dire ?" rows="3" class="mb-3 ml-3 text-area" v-model="postTextArea">
+          </b-form-textarea>
+        </b-col>
+          <b-col lg="1">
+            <div class="button-col">
+            <b-button pill size="sm" class="mb-3 send-button" @click="createPost">Envoyer</b-button>
+            <b-button pill size="sm" class="mb-3 reset-button" @click="resetPost">Annuler</b-button>
+          </div>
+          </b-col>
+
+      </b-row>
+      <br><br><br><br><br>
       <b-row v-for="postData in posts" :key="postData.id" v-show="!displayProfile">
         <b-col>
           <Post :post="postData" :admin="admin" :userId="userId" :token="token"></Post>
         </b-col>
       </b-row>
+      
     </b-container>
 </template>
  
@@ -40,6 +53,7 @@ export default {
   
   data() {
     return {
+      imageData: null,
       displayCommands: false,
       displayProfile: false,
       posts: [],
@@ -68,8 +82,21 @@ export default {
   }, 
 
   methods: {
-        handleFileUpload(){
-      this.file = this.$refs.file.files[0];
+
+    chooseImage () {
+      this.$refs.file.click()
+    },
+    onSelectFile () {
+      const input = this.$refs.file
+      const files = input.files
+      if (files && files[0]) {
+        const reader = new FileReader
+        reader.onload = event => {
+          this.imageData = event.target.result
+        }
+        reader.readAsDataURL(files[0])
+        this.file = this.$refs.file.files[0];
+      }
     },
 
     createPost() {
@@ -110,6 +137,7 @@ export default {
       
     },
     resetPost() {
+      this.imageData = null;
       this.postTextArea = '';
       this.$refs.file.value = ''
     }
@@ -141,10 +169,53 @@ export default {
     border-radius: 80px 30px;
     text-align: center;
   }
+  .send-button {
+    background-color: #ffd7d7;
+    color: black;
+      border: solid 1px #fd2d01;
+  }
+  .send-button:hover {
+      background: #ffb3b3;
+  }
   .reset-button {
     background-color: transparent;
-    border: solid 1px #fd2d01;
-    color: black;
+    border: solid 1px #ffb3b3;
+    color: #ffb3b3;
   }
-
+  .reset-button:hover {
+    background: #f1f1f1;
+  }
+  .button-col {
+    display: flex;
+    flex-direction: column;
+    width: 5em;
+  }
+  .base-image-input {
+  display: block;
+  width: 5.5em;
+  height: 5.5em;
+  cursor: pointer;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+  .placeholder {
+  background: #ffd7d7;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+  font-size: 1em;
+  text-align: center;
+  border: solid 1px #fd2d01;
+  border-radius: 5px;
+}
+.placeholder:hover {
+  background: #ffb3b3;
+}
+.file-input {
+  display: none;
+}
 </style>

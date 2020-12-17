@@ -56,6 +56,8 @@ exports.modifyPost = (req, res, next) => {
   };
   if (req.file) {
     post.image = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
+  } else {
+    post.image = "";
   }
   Post.update(post,
     {
