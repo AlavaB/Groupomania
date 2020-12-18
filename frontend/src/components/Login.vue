@@ -1,10 +1,9 @@
 <template>
-  <b-container>
-    
+  <b-container>  
     <b-row align-h="center">
-      <b-col class="text-center" lg="8">
+      <b-col class="text-center" sm="10" lg="8">
         <img class="icon-name" src="../assets/images/icon-name.png" alt="Logo and company name">
-        <h1 class="pb-5">Bienvenue sur votre réseau social d'entreprise</h1>
+        <h1 class="pb-4">Bienvenue sur votre réseau social d'entreprise</h1>
       </b-col>
     </b-row>
     
@@ -13,7 +12,7 @@
       <b-col lg="8">        
         <h2 class="mb-3" align="center">Connectez-vous</h2>
         <b-row>
-          <b-col offset-lg="2" lg="8">
+          <b-col offset="1" cols="10" offset-sm="1" sm="10" offset-md="1" md="10" offset-lg="2" lg="8">
             <b-card align="center" class="identification-box">  
               <div align="center">
                 <b-form>
@@ -44,11 +43,9 @@ export default {
   name: "Login",
   data() {
       return {
-        email: 'test@test.fr',//nikola@email.fr, emilie@email.fr
-        password: 'testtest1',//nikolatest1, emilietest1
-        error: '',
-        emailRegex: /^(([^<>()\]\\.,;:\s@"]+(\.[^<>()\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
-        passwordRegex: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/   
+        email: 'emilie@email.fr',//nikola@email.fr, 
+        password: 'emilietest1',//nikolatest1, emilietest1
+        error: '',  
       }
   },
   methods: {
@@ -57,20 +54,15 @@ export default {
         email: this.email,
         password: this.password
       }
-      if (!this.emailRegex.test(this.email)) {
-        return this.error = "Vous devez renseigner votre adresse email";
-      } else if (!this.passwordRegex.test(this.password)) {
-        return this.error = "Vous devez renseigner votre mot de passe";
-      } 
       this.$http.post(url + 'users/login', user)
         .then(res => {
         if (res.status === 200) {
           localStorage.setItem('currentUser', JSON.stringify(res.data));
           this.$router.push('/');
         }})
-        .catch(err => {
+        .catch(() => {
           localStorage.clear();
-          this.error = err.response.data.title//TODO erreur
+          this.error = "Nous ne pouvons pas vous connecter. Vérifiez vos identifiants."
         });  
     }
   }
@@ -81,11 +73,11 @@ export default {
   .identification-box {
       background-color: #ffd7d7;
   }
-  h1 {
-    font-size: 1.5em;
-  }
   .icon-name {
     height: 250px;
+  }
+  h1 {
+    font-size: 1.5em;
   }
   .submit-button {
     background-color: #ffd7d7;
@@ -100,6 +92,21 @@ export default {
   }
   .input {
     width: 20em;
+  }
+
+  @media screen and (max-width: 580px) {
+    .icon-name {
+      height: 180px;
+    }
+    h1 {
+      font-size: 1.2em;
+    }
+    h2 {
+      font-size: 1em;
+    }
+    .input {
+    width: 12em;
+    }
   }
 </style>
     

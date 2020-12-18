@@ -1,9 +1,11 @@
 <template>
     <b-container>
         <b-row>
-          <b-col offset-lg="1" lg="1" ><b-avatar :src="this.post.userProfilePicture" size="4rem"></b-avatar></b-col>
-          <b-col lg="9" class="post mb-3">
-            <div class="post-header pr-2 pl-2 mb-3 font-weight-bolder">Publié par {{ post.user }} le {{ post.creationDate }}</div>
+          <b-col lg="2">
+            <div align="center" class="avatar" @click="getUsersPosts"><b-avatar :src="this.post.userProfilePicture" size="4rem"></b-avatar></div>
+            </b-col>
+          <b-col lg="8" class="post mb-3">
+            <div class="post-header pr-2 pl-2 mb-3 font-weight-bolder">Publié par <span @click="getUsersPosts">{{ post.user }}</span> le {{ post.creationDate }}</div>
           
           <!-- Vue pour modification -->
             <b-row  v-show="displayModifyPost"> 
@@ -27,15 +29,18 @@
 
 
           <b-row v-show="!displayModifyPost"> <!-- Affichage -->           
-            <b-col lg="3">
+            <b-col lg="3" v-show="displayPostImage">
               <div class="image-container"><img id="modifyImage" class="image-styling" :src="postImage" alt="Image"></div>
             </b-col>
-            <b-col lg="7">
+            <b-col lg="7" v-show="displayPostImage">
+              <div class="post-content pr-2 pl-2">{{ post.content }}</div>
+            </b-col>
+            <b-col lg="10" v-show="!displayPostImage">
               <div class="post-content pr-2 pl-2">{{ post.content }}</div>
             </b-col>
             <b-col lg="2">
               <div class="d-flex justify-content-end">
-                <b-button-group>
+                <b-button-group v-show="displayDropdownButton">
                   <b-dropdown variant="outline-danger" size="sm" right text=". . .">
                   <b-dropdown-item v-if="userId === post.userId" @click="displaySwitch">Modifier</b-dropdown-item>
                   <b-dropdown-item v-if="admin || userId === post.userId" @click="deletePost">Supprimer</b-dropdown-item>
@@ -57,8 +62,10 @@ export default {
 
   data(){
     return {
+      displayPostImage: false,
       imageData: this.post.image,
       displayModifyPost : false,
+      displayDropdownButton: false,
       modifyTextArea: this.post.content,
       userProfilePicture: this.post.userProfilePicture,
       uri: 'posts/' + this.post.id,
@@ -80,14 +87,6 @@ export default {
       return { 
         content: this.modifyTextArea }
     },
-
-    displayImage() {
-    if(this.post.image){
-        return true
-      } else {
-        return false
-      }
-    }
   },
   props: {
     post: {
@@ -107,7 +106,24 @@ export default {
     this.switchDropdownButton()
   },
 
+  mounted() {
+    this.displayImage()
+  },
+
   methods: {
+    displayImage() {
+    if(this.post.image){
+        return this.displayPostImage = true;
+      } else {
+        return this.displayPostImage = false;
+      }
+    },
+    getUsersPosts() {
+      this.$http.get(url + 'posts/users/' + this.post.userId, this.headers)
+      .then(res => { 
+        this.$emit('users-posts', res.data);
+        this.$emit('post-by-profile', true) })
+    },
     chooseImage () {
       this.$refs.fileInput.click()
     },
@@ -194,6 +210,7 @@ export default {
     background-color:  #ffd7d7;
     font-size: 1em;
     border-radius: 80px 30px;
+    white-space: pre-wrap;
   }
   .text-area {
     resize: none;
@@ -261,5 +278,9 @@ export default {
 }
 .file-input {
   display: none;
+}
+.avatar {
+  border-radius: 50%;
+  cursor: pointer;
 }
 </style>

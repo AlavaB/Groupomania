@@ -1,7 +1,7 @@
 <template>
   <b-container>
     <b-row align-h="center">
-      <b-col class="text-center" lg="8">
+      <b-col class="text-center" sm="6" md="8" lg="8" >
         <img class="icon-name" src="../assets/images/icon-name.png" alt="Logo and company name">
         <h1 class="pb-5">Bienvenue sur votre réseau social d'entreprise</h1>
       </b-col>
@@ -16,14 +16,14 @@
             <b-card class="identification-box">
               <div align="center">
                 <b-form>
-                  <label for="pseudo" @keyup.enter="signup">Pseudo *</label>
-                  <b-form-input id="input-1" class="mb-3 input" v-model="pseudo" required placeholder="Entrez votre pseudo">                   
+                  <label for="pseudo">Pseudo *</label>
+                  <b-form-input id="input-1" class="mb-3 input" v-model="pseudo" required placeholder="Entrez votre pseudo" @keyup.enter="signup">                   
                   </b-form-input>
-                  <label for="email-adress" @keyup.enter="signup">Adresse email *</label>
-                  <b-form-input id="input-2" class="mb-3 input" v-model="email" type="email" required placeholder="Entrez votre adresse email">                  
+                  <label for="email-adress">Adresse email *</label>
+                  <b-form-input id="input-2" class="mb-3 input" v-model="email" type="email" required placeholder="Entrez votre adresse email" @keyup.enter="signup">                  
                   </b-form-input>
-                  <label for="password" @keyup.enter="signup">Mot de passe *</label>
-                  <b-form-input id="input-3" class="input" v-model="password" type="password" required placeholder="Entrez votre mot de passe">                    
+                  <label for="password">Mot de passe *</label>
+                  <b-form-input id="input-3" class="input" v-model="password" type="password" required placeholder="Entrez votre mot de passe" @keyup.enter="signup">                    
                   </b-form-input>
                 </b-form>
               </div>
@@ -52,9 +52,9 @@ export default {
       password: '',
       show: true,
       error: '',
-      pseudoRegex: /(.*[a-z]){3}/,
+      pseudoRegex: /^[a-zA-Z0-9]{3,}$/,
       emailRegex: /^(([^<>()\]\\.,;:\s@"]+(\.[^<>()\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
-      passwordRegex: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+      passwordRegex: /^(?=.*[a-z])(?=.*[0-9])(?=.{8,})/
     }
   },
   methods: {
@@ -86,9 +86,14 @@ export default {
             this.error = err.response.data.title;//TODO erreur
           });
         }
-      },
-      (err) => {
-        this.error = err.response.data.title;//TODO erreur
+      }
+      ).catch(err => { this.error = err
+        /*if (err = "email unicity problem") {
+          this.error = "Adresse email déjà utilisée"
+        } else {
+          err
+        }*/
+        //this.error = err.response.data.title;TODO erreur
       })
     }
   }

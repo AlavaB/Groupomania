@@ -1,7 +1,7 @@
 <template>
   <b-container class="mb-4"> 
     <b-navbar class="pt-3" toggleable="lg" type="light">
-      <b-navbar-brand @click="disableDisplayProfile" href="#">
+      <b-navbar-brand @click="reloadPage">
         <router-link to="/"><!--TODO-->
           <img class="logo" src="../assets/images/icon-header.png" alt="Logo and company name"/>
         </router-link>
@@ -29,10 +29,14 @@ export default {
   methods: {
     switchDisplayProfile() {
       let emitDisplayProfile = !this.displayProfile;
+      this.$parent.getPosts();
       this.$emit('display-profile', emitDisplayProfile)
     },
     disableDisplayProfile() {
       this.$emit('display-profile', false);
+    },
+    reloadPage() {
+      location.reload();
     },
     logout() {
       localStorage.clear();

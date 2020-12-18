@@ -27,7 +27,14 @@ exports.createUser = (req, res, next) => {
           message: "Inscription réussie"
           }); 
         })
-        .catch(err => res.status(400).send({ err }));
+        .catch(err => {
+          if (err.errors[0].message = "users.email must be unique") {
+            res.status(400).send("email unicity problem")
+          }
+        }
+        
+          
+          );
     })
     .catch(err => res.status(500).json({ err }));
 };

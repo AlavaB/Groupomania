@@ -37,7 +37,7 @@
                 </b-row>
                 <div class="mt-4" align="center">
                     <b-button pill @click="modifyUser" class="send-button">Modifier</b-button>
-                    <b-button pill @click="modifyUser" class="ml-3 reset-button">Annuler</b-button>
+                    <b-button pill @click="cancelModification" class="ml-3 reset-button">Annuler</b-button>
                     <b-button pill size="sm" class="ml-3 delete-button" @click="deleteUser">Supprimer mon profil</b-button>
                 </div>
             </b-col>
@@ -143,6 +143,12 @@ export default {
                 this.$refs.fileInput.value = '' })
             .catch(err => { console.log(err) })
         },
+        cancelModification() {
+            this.getUser();
+            this.password = "";
+            this.displayModifyPassword = true;
+            this.imageData = this.user.profilePicture;
+        },
         deleteUser() { 
             confirm("Attention. Toutes vos données seront supprimées. Cette action est irréversible.")
             this.$http.delete(url + this.uri, this.headers)
@@ -161,10 +167,8 @@ export default {
     .identification-box {
         background-color: #ffd7d7;
     }
-    
     .input:hover {
-        background-color: #ffb3b3;
-        border: solid 1px #fd2d01;
+       border: solid 1px #fd2d01;
     }
     .modify-password {
         background-color: white;
@@ -172,7 +176,6 @@ export default {
         color: black;
     }
     .modify-password:hover {
-        background-color: #ffb3b3;
         border: solid 1px #fd2d01;
     }
     .send-button {

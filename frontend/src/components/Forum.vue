@@ -2,28 +2,42 @@
   <b-container display="flex">      
     <Header @display-profile="switchDisplayProfile" :displayProfile="displayProfile"/>
     <Profile @display-profile="switchDisplayProfile" v-show="displayProfile" :userId="userId" :token="token" :displayProfile="displayProfile"></Profile>
-    <b-row class="mb-5" v-show="!displayProfile">      
-      <b-col lg="2" align="center">
-        <div class="base-image-input" :style="{ 'background-image': `url(${imageData})` }" @click="chooseImage">
-          <span v-if="!imageData" class="placeholder">Insérer une image</span>
-          <input class="file-input" ref="file" type="file" @input="onSelectFile">
-        </div>
+    <div v-show="!displayPostByProfile">
+      <b-row class="mb-5" v-show="!displayProfile">      
+        <b-col lg="2" align="center">
+          <div class="base-image-input" :style="{ 'background-image': `url(${imageData})` }" @click="chooseImage">
+            <span v-if="!imageData" class="placeholder">Insérer une image</span>
+            <input class="file-input" ref="file" type="file" @input="onSelectFile">
+          </div>
+        </b-col>
+        <b-col lg="8" align="center">
+          <b-form-textarea id="textarea-rows" placeholder="Que voulez-vous dire ?" rows="3" class="text-area" v-model="postTextArea">
+          </b-form-textarea>
+          <p>{{ postError }}</p>
+        </b-col>
+        <b-col lg="2" align="center">
+          <div class="button-col">
+            <b-button pill size="sm" class="mb-3 send-button" @click="createPost">Envoyer</b-button>
+            <b-button pill size="sm" class="mb-3 reset-button" @click="resetPost">Annuler</b-button>
+          </div>
+        </b-col>
+      </b-row>
+    </div>
+    <b-row v-show="displayPostByProfile">
+      <b-col>
+        <b-button @click="switchDisplayPostByProfile(false); getPosts()">Retour</b-button>
       </b-col>
-      <b-col lg="8" align="center">
-        <b-form-textarea id="textarea-rows" placeholder="Que voulez-vous dire ?" rows="3" class="text-area" v-model="postTextArea">
-        </b-form-textarea>
+      <b-col>
+        <div class="profile-picture" :style="{ 'background-image': `url(${userProfilePicture})` }"></div>
       </b-col>
-      <b-col lg="2" align="center">
-        <div class="button-col">
-          <b-button pill size="sm" class="mb-3 send-button" @click="createPost">Envoyer</b-button>
-          <b-button pill size="sm" class="mb-3 reset-button" @click="resetPost">Annuler</b-button>
-        </div>
+      <b-col>
+        <h2>{{ userName }}</h2>
+        <p>{{ userEmail }}</p>
       </b-col>
     </b-row>
-
     <b-row v-for="postData in posts" :key="postData.id" v-show="!displayProfile">
       <b-col>
-        <Post :post="postData" :admin="admin" :userId="userId" :token="token"></Post>
+        <Post @users-posts="usersPosts" @post-by-profile="switchDisplayPostByProfile" :post="postData" :admin="admin" :userId="userId" :token="token"></Post>
       </b-col>
     </b-row>
     
@@ -47,6 +61,11 @@ export default {
   
   data() {
     return {
+      postError: "",
+      userProfilePicture: "",
+      userName: "",
+      userEmail: "",
+      displayPostByProfile: false,
       imageData: null,
       displayCommands: false,
       displayProfile: false,
@@ -61,11 +80,24 @@ export default {
       file: ""
     }
   },
-
+  watch: {
+    posts: function() {
+      if ( this.posts !== 'undefined' && this.posts.length > 0) {
+      this.userProfilePicture = this.posts[0].userProfilePicture
+      this.userName = this.posts[0].user
+      this.userEmail = this.posts[0].email
+      }
+    },
+    displayProfile() {
+      if (this.displayProfile === true) {
+        this.displayPostByProfile = false;
+      }
+    },
+  },
   computed: {
     headers() {
       return {headers: {Authorization: this.token, userId: this.userId}} // voir si necessaire 'content-type': 'multipart/form-data'
-    }
+    },
   },
 
   created() {
@@ -92,6 +124,10 @@ export default {
       }
     },
     createPost() {
+      if (!this.postTextArea && !this.imageData) {
+        this.postError = "Votre post est vide";
+        return
+      }
       let formData = new FormData();
       formData.append('image', this.file);
       formData.append('content', this.postTextArea);
@@ -106,6 +142,12 @@ export default {
       this.$http.get(url + 'posts', this.headers)
       .then(res => { 
         this.posts = res.data })
+    },
+    usersPosts(data) {
+      this.posts = data;
+    },
+    switchDisplayPostByProfile(data) {
+      this.displayPostByProfile = data;
     },
     switchDisplayProfile(data) {
         this.displayProfile = data;
@@ -201,5 +243,15 @@ export default {
   }
   .file-input {
     display: none;
+  }
+  .profile-picture {
+    display: block;
+    width: 10em;
+    height: 10em;
+    cursor: pointer;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    border-radius: 50%;
   }
 </style>

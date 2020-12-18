@@ -7,6 +7,7 @@ module.exports = app => {
   
     router.post("/", auth, multer, posts.createPost);
     router.get("/:id", auth, posts.getOnePost);
+    router.get("/users/:id", auth, posts.getAllUsersPosts);
     router.get("/", auth, posts.getAllPosts);
     router.put('/:id',  multer, posts.modifyPost);
     router.delete('/:id', posts.deletePost);

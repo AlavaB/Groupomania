@@ -23,6 +23,34 @@ exports.getOnePost = (req, res, next) => {
     .catch(err => res.status(500).json({ err }));
 };
 
+// Récupération de tous les posts par utilisateur
+exports.getAllUsersPosts = (req, res, next) => {
+  Post.findAll({
+    where: {user_id: req.params.id},
+    order: [["created_at", "DESC"]],
+    include: [{
+      model: db.user
+    }]
+  })
+    .then(posts => {
+      const postObject = posts.map(post => {
+        return Object.assign(
+          {
+            id: post.id,
+            content: post.content,
+            user: post.user.pseudo,
+            userProfilePicture: post.user.profil_picture,
+            userId: post.user.id,
+            creationDate: post.created_at,
+            image: post.image,
+            email: post.user.email
+          })
+      });
+      res.status(200).json(postObject)
+    })
+    .catch(err => res.status(500).json(err))
+};
+
 // Récupération de tous les posts
 exports.getAllPosts = (req, res, next) => {
   Post.findAll({
