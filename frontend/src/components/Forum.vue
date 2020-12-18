@@ -1,38 +1,33 @@
 <template>
-    <b-container display="flex">
-      
-      <Header @display-profile="switchDisplayProfile" :displayProfile="displayProfile"/>
-      <Profile @display-profile="switchDisplayProfile" v-show="displayProfile" :userId="userId" :token="token" :displayProfile="displayProfile"></Profile>
-      
-      
-      <b-row v-show="!displayProfile">
-        
-        <b-col offset="1" lg="1">
+  <b-container display="flex">      
+    <Header @display-profile="switchDisplayProfile" :displayProfile="displayProfile"/>
+    <Profile @display-profile="switchDisplayProfile" v-show="displayProfile" :userId="userId" :token="token" :displayProfile="displayProfile"></Profile>
+    <b-row class="mb-5" v-show="!displayProfile">      
+      <b-col lg="2" align="center">
         <div class="base-image-input" :style="{ 'background-image': `url(${imageData})` }" @click="chooseImage">
-                <span v-if="!imageData" class="placeholder">Insérer une image</span>
-                <input class="file-input" ref="file" type="file" @input="onSelectFile">
-              </div>
-          </b-col>
-          <b-col lg="8">
-          <b-form-textarea id="textarea-rows" placeholder="Que voulez-vous dire ?" rows="3" class="mb-3 ml-3 text-area" v-model="postTextArea">
-          </b-form-textarea>
-        </b-col>
-          <b-col lg="1">
-            <div class="button-col">
-            <b-button pill size="sm" class="mb-3 send-button" @click="createPost">Envoyer</b-button>
-            <b-button pill size="sm" class="mb-3 reset-button" @click="resetPost">Annuler</b-button>
-          </div>
-          </b-col>
+          <span v-if="!imageData" class="placeholder">Insérer une image</span>
+          <input class="file-input" ref="file" type="file" @input="onSelectFile">
+        </div>
+      </b-col>
+      <b-col lg="8" align="center">
+        <b-form-textarea id="textarea-rows" placeholder="Que voulez-vous dire ?" rows="3" class="text-area" v-model="postTextArea">
+        </b-form-textarea>
+      </b-col>
+      <b-col lg="2" align="center">
+        <div class="button-col">
+          <b-button pill size="sm" class="mb-3 send-button" @click="createPost">Envoyer</b-button>
+          <b-button pill size="sm" class="mb-3 reset-button" @click="resetPost">Annuler</b-button>
+        </div>
+      </b-col>
+    </b-row>
 
-      </b-row>
-      <br><br><br><br><br>
-      <b-row v-for="postData in posts" :key="postData.id" v-show="!displayProfile">
-        <b-col>
-          <Post :post="postData" :admin="admin" :userId="userId" :token="token"></Post>
-        </b-col>
-      </b-row>
-      
-    </b-container>
+    <b-row v-for="postData in posts" :key="postData.id" v-show="!displayProfile">
+      <b-col>
+        <Post :post="postData" :admin="admin" :userId="userId" :token="token"></Post>
+      </b-col>
+    </b-row>
+    
+  </b-container>
 </template>
  
 <script>
@@ -44,7 +39,6 @@ import { url } from '../main'
 
 export default {
   name: "Forum",
-  
   components: {
     Header,
     Post,
@@ -73,16 +67,15 @@ export default {
       return {headers: {Authorization: this.token, userId: this.userId}} // voir si necessaire 'content-type': 'multipart/form-data'
     }
   },
+
   created() {
     this.getUser()
   },
-
   mounted() {
     this.getPosts()
   }, 
 
   methods: {
-
     chooseImage () {
       this.$refs.file.click()
     },
@@ -98,7 +91,6 @@ export default {
         this.file = this.$refs.file.files[0];
       }
     },
-
     createPost() {
       let formData = new FormData();
       formData.append('image', this.file);
@@ -110,17 +102,14 @@ export default {
         this.getPosts() 
       })
     },
-
     getPosts() {
       this.$http.get(url + 'posts', this.headers)
       .then(res => { 
         this.posts = res.data })
     },
-
     switchDisplayProfile(data) {
         this.displayProfile = data;
     },
-
     //Validation du state de l'utilisateur
     getUser() {
       const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -133,20 +122,16 @@ export default {
       })
       } else {
         this.$router.push('/login');
-      }
-      
+      }    
     },
     resetPost() {
       this.imageData = null;
       this.postTextArea = '';
       this.$refs.file.value = ''
     }
-}   
+  }   
 };
-
-
 </script>
-
 
 <style scoped>
   .text-area {
@@ -172,10 +157,10 @@ export default {
   .send-button {
     background-color: #ffd7d7;
     color: black;
-      border: solid 1px #fd2d01;
+    border: solid 1px #fd2d01;
   }
   .send-button:hover {
-      background: #ffb3b3;
+    background: #ffb3b3;
   }
   .reset-button {
     background-color: transparent;
@@ -183,7 +168,7 @@ export default {
     color: #ffb3b3;
   }
   .reset-button:hover {
-    background: #f1f1f1;
+    background: #ffe4e4;
   }
   .button-col {
     display: flex;
@@ -191,31 +176,30 @@ export default {
     width: 5em;
   }
   .base-image-input {
-  display: block;
-  width: 5.5em;
-  height: 5.5em;
-  cursor: pointer;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center center;
+    width: 5.5em;
+    height: 5.5em;
+    cursor: pointer;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
 }
   .placeholder {
-  background: #ffd7d7;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: black;
-  font-size: 1em;
-  text-align: center;
-  border: solid 1px #fd2d01;
-  border-radius: 5px;
+    background: #ffd7d7;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+    font-size: 1em;
+    text-align: center;
+    border: solid 1px #fd2d01;
+    border-radius: 5px;
 }
-.placeholder:hover {
-  background: #ffb3b3;
-}
-.file-input {
-  display: none;
-}
+  .placeholder:hover {
+    background: #ffb3b3;
+  }
+  .file-input {
+    display: none;
+  }
 </style>

@@ -1,36 +1,37 @@
 <template>
     <b-container>
         <b-row>
-          <b-col offset-lg="1" lg="1"><b-avatar :src="this.post.userProfilePicture" size="3rem"></b-avatar></b-col>
-          <b-col lg="9" class="post mb-4">
+          <b-col offset-lg="1" lg="1" ><b-avatar :src="this.post.userProfilePicture" size="4rem"></b-avatar></b-col>
+          <b-col lg="9" class="post mb-3">
             <div class="post-header pr-2 pl-2 mb-3 font-weight-bolder">Publié par {{ post.user }} le {{ post.creationDate }}</div>
           
-          <b-row  v-show="displayModifyPost"> <!-- Vue modification -->
-            <b-col lg="2">
-              <div class="base-image-input" v-b-tooltip.hover title="Modifier" :style="{ 'background-image': `url(${imageData})` }" @click="chooseImage">
-                <span v-if="!imageData" class="placeholder">Insérer une image</span>
-                <input class="file-input" ref="fileInput" type="file" @input="onSelectFile">
-              </div>
-            </b-col>
-            <b-col lg="8">
-              <b-form-textarea class="text-area" rows="3" v-model="modifyTextArea">
-                    </b-form-textarea>
-            </b-col>
-            <b-col lg="1">
-              <div class="button-col">
-              <b-button pill size="sm" class="mb-3 send-button" @click="modifyPost">Envoyer</b-button>
-              <b-button pill size="sm" class="mb-3 reset-button" @click="resetModifyPost">Annuler</b-button>
-              </div>
-            </b-col>                                          
-          </b-row>
+          <!-- Vue pour modification -->
+            <b-row  v-show="displayModifyPost"> 
+              <b-col lg="2">
+                <div class="base-image-input" v-b-tooltip.hover title="Modifier l'image" :style="{ 'background-image': `url(${imageData})` }" @click="chooseImage">
+                  <span v-if="!imageData" class="placeholder">Insérer une image</span>
+                  <input class="file-input" ref="fileInput" type="file" @input="onSelectFile">
+                </div>
+              </b-col>
+              <b-col lg="8">
+                <b-form-textarea class="text-area" rows="3" v-model="modifyTextArea">
+                      </b-form-textarea>
+              </b-col>
+              <b-col lg="1">
+                <div class="button-col">
+                <b-button pill size="sm" class="mb-3 send-button" @click="modifyPost">Envoyer</b-button>
+                <b-button pill size="sm" class="mb-3 reset-button" @click="resetModifyPost">Annuler</b-button>
+                </div>
+              </b-col>                                          
+            </b-row>
 
 
-          <b-row v-show="!displayModifyPost"> <!-- Affichage -->
+          <b-row v-show="!displayModifyPost"> <!-- Affichage -->           
+            <b-col lg="3">
+              <div class="image-container"><img id="modifyImage" class="image-styling" :src="postImage" alt="Image"></div>
+            </b-col>
             <b-col lg="7">
               <div class="post-content pr-2 pl-2">{{ post.content }}</div>
-            </b-col>
-            <b-col lg="3">
-              <div class="img-container"><img id="modifyImage" class="img-styling" :src="postImage" alt="Image"></div>
             </b-col>
             <b-col lg="2">
               <div class="d-flex justify-content-end">
@@ -204,14 +205,27 @@ export default {
     box-shadow: 0 0 10px  #ffd7d7;
   }
   .send-button {
-    background-color:#fe5634;
-    border: none;
+    background-color: #ffd7d7;
+    color: black;
+    border: solid 1px #fd2d01;
   }
-  .img-container {
-    max-width: 20em;
-    max-height: 20em
+  .send-button:hover {
+      background: #ffb3b3;
   }
-  .img-styling{
+  .reset-button {
+    background-color: transparent;
+    border: solid 1px #ffb3b3;
+    color: #ffb3b3;
+  }
+  .reset-button:hover {
+    background: #ffe4e4;
+  }
+
+  .image-container {
+    max-width: 10em;
+    max-height: 10em
+  }
+  .image-styling{
     height: 100%;
     width: 100%;
     object-fit: cover

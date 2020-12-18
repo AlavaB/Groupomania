@@ -6,7 +6,6 @@
           <img class="logo" src="../assets/images/icon-header.png" alt="Logo and company name"/>
         </router-link>
       </b-navbar-brand>
-
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav class="ml-auto">
@@ -40,18 +39,12 @@ export default {
       this.$router.push('/login');
     }
   }
-  };
-
-
+};
 </script>
 
 <style scoped>
-    .header-link {
-        color: #fd2d01;
-        text-decoration: none;
-    }
-    .logo {
-        height: 50px;
-    }
+  .logo {
+      height: 50px;
+  }
 
 </style>
