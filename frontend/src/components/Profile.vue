@@ -4,7 +4,7 @@
             <b-col lg="8">
                 <h1 align="center" class="mb-4">Mon profil</h1>
                 <b-row>
-                    <b-col offset-lg="2" lg="8">
+                    <b-col offset="1" cols="10" offset-md="2" md="8" offset-lg="2" lg="8">
                         <b-card class="identification-box">
                         <!--Gestion de l'image-->
                             <div align="center" class="mb-3">
@@ -29,17 +29,32 @@
                                                    
                             <div align="center" v-show="!displayModifyPassword">
                                 <label for="password" >Mot de passe</label>
-                                <b-form-input class="input" id="input-3" v-model="password" type="password" placeholder="Tapez votre nouveau mot de passe">
+                                <b-form-input class="input" id="input-3" v-model="password" type="password" placeholder="Nouveau mot de passe">
                                 </b-form-input>    
                             </div>
                         </b-card> 
                     </b-col>
                 </b-row>
-                <div class="mt-4" align="center">
-                    <b-button pill @click="modifyUser" class="send-button">Modifier</b-button>
-                    <b-button pill @click="cancelModification" class="ml-3 reset-button">Annuler</b-button>
-                    <b-button pill size="sm" class="ml-3 delete-button" @click="deleteUser">Supprimer mon profil</b-button>
-                </div>
+                <b-row class="mt-4" align="center">
+                    <b-col offset="2" cols="4" offset-sm="3" sm="3" offset-md="3" md="3" offset-lg="3" lg="3">
+                        <div>                           
+                            <b-button pill @click="cancelModification" class="ml-3 reset-button">Annuler</b-button>
+                        </div>
+                    </b-col>
+                    <b-col cols="4" sm="3" md="3" lg="3">
+                        <div>
+                            <b-button pill @click="modifyUser" class="send-button">Modifier</b-button>
+                        </div>                       
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col offset-lg="4" lg="4">
+                        <div class="mt-4" align="center">
+                            <b-button pill size="sm" class="mb-3 delete-button" @click="deleteUser">Supprimer mon profil</b-button>
+                        </div>
+                    </b-col>   
+                </b-row>
+                
             </b-col>
         </b-row>
     </b-container>
@@ -167,9 +182,6 @@ export default {
     .identification-box {
         background-color: #ffd7d7;
     }
-    .input:hover {
-       border: solid 1px #fd2d01;
-    }
     .modify-password {
         background-color: white;
         border: none;
@@ -195,6 +207,7 @@ export default {
         background: #ffe4e4;
         color:  #fd2d01;
     }
+    
     .delete-button {
         background-color: transparent;
         border: solid 1px #ffb3b3;
@@ -239,4 +252,36 @@ export default {
     .input {
         width: 20em;
     }
+    .input:hover {
+        outline: none !important;
+        border: solid 1px #fd2d01;
+        box-shadow: 0 0 10px  #ffd7d7;
+    }
+
+    @media screen and (max-width: 870px) {
+
+    h1 {
+      font-size: 2em;
+    }
+    .base-image-input {
+        width: 8em;
+        height: 8em;
+    }
+    .input {
+        width: 18em;
+    }
+   }
+   
+   @media screen and (max-width: 480px){
+       h1 {
+      font-size: 1.5em;
+    }
+    .base-image-input {
+        width: 5em;
+        height: 5em;
+    }
+    .input {
+        width: 12em;
+    }
+   }
 </style>

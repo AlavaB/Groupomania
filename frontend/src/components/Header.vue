@@ -1,6 +1,6 @@
 <template>
   <b-container class="mb-4"> 
-    <b-navbar class="pt-3" toggleable="lg" type="light">
+    <b-navbar class="pt-3" toggleable="sm" type="light">
       <b-navbar-brand @click="reloadPage">
         <router-link to="/"><!--TODO-->
           <img class="logo" src="../assets/images/icon-header.png" alt="Logo and company name"/>
@@ -50,5 +50,12 @@ export default {
   .logo {
       height: 50px;
   }
+  .nav-item {
+    text-align: end;
+    color: #fd2d01 !important;
+  }
+@media screen and (max-width: 576px) {
+  
+}
 
 </style>

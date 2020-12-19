@@ -1,18 +1,18 @@
 <template>
   <b-container>
     <b-row align-h="center">
-      <b-col class="text-center" sm="6" md="8" lg="8" >
+      <b-col class="text-center" sm="10" lg="8" >
         <img class="icon-name" src="../assets/images/icon-name.png" alt="Logo and company name">
-        <h1 class="pb-5">Bienvenue sur votre réseau social d'entreprise</h1>
+        <h1 class="pb-4">Bienvenue sur votre réseau social d'entreprise</h1>
       </b-col>
     </b-row>
 
     <!--Formulaire d'inscription-->
     <b-row align-h="center">
-      <b-col lg="8">
+      <b-col md="10" lg="8">
         <h2 class="mb-3" align="center">Inscrivez-vous</h2>
         <b-row>
-          <b-col offset-lg="2" lg="8">
+          <b-col cols="12" offset-sm="1" sm="10" offset-md="1" md="10" offset-lg="2" lg="8">
             <b-card class="identification-box">
               <div align="center">
                 <b-form>
@@ -28,12 +28,17 @@
                 </b-form>
               </div>
             </b-card>
-            <p class="error-message font-weight-bold text-center mt-3">{{ error }}</p>
-              <p align="center">Déjà inscrit ? <router-link to="/login">Se connecter</router-link>
-              <b-button pill class="submit-button ml-5" type="submit" @click="signup">S'inscrire</b-button>
-            </p>
+            <p class="error-message font-weight-bold text-center mt-2">{{ error }}</p>              
           </b-col> 
-        </b-row>          
+        </b-row>     
+        <b-row class="mt-2 switch-page">
+              <b-col align="center" cols="12" offset-sm="1" sm="6" offset-md="2" md="5" offset-lg="2" lg="5">
+                <p>Déjà inscrit ? <router-link to="/login">Se connecter</router-link></p>
+              </b-col>
+              <b-col align="center" class="mb-3" cols="12" sm="4" md="3" lg="3">
+                <b-button pill class="submit-button" type="submit" @click="signup">S'inscrire</b-button>
+              </b-col>
+        </b-row>       
       </b-col>
     </b-row>
   </b-container>
@@ -116,6 +121,9 @@ export default {
   h1 {
     font-size: 1.5em;
   }
+  h2 {
+    font-size: 1.4em;
+  }
   .icon-name {
     height: 250px;
   }
@@ -124,5 +132,41 @@ export default {
   }
   .input {
     width: 20em;
+  }
+  .input:hover {
+    outline: none !important;
+    border: solid 1px #fd2d01;
+    box-shadow: 0 0 10px  #ffd7d7;
+  }
+  .switch-page {
+    line-height: 50px;
+  }
+  @media screen and (max-width: 870px) {
+    .icon-name {
+      height: 200px;
+    }
+    h1 {
+      font-size: 1.2em;
+    }
+    h2 {
+      font-size: 1.3em;
+    }
+   }
+  @media screen and (max-width: 560px) {
+    .icon-name {
+      height: 150px;
+    }
+    h1 {
+      font-size: 1.2em;
+    }
+    h2 {
+      font-size: 1.2em;
+    }
+    .input {
+    width: 15.5em;
+    }
+    .switch-page {
+      line-height: 30px;
+    }
   }
 </style>

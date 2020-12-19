@@ -5,14 +5,21 @@ const User = db.user;
 const { secret } = require('../config.json');
 const { oldEmployesPassword } = require('../config.json');
 
+
+const regexEmail = /^(([^<>()\]\\.,;:\s@"]+(\.[^<>()\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/;
+
 //Création d'un utilisateur
 exports.createUser = (req, res, next) => {
   if (!req.body.email || !req.body.pseudo || !req.body.password) {
+    res.status(400).json({ 
+      message: "Echec de l'inscription, information manquante"
+     });
+    return;
+  } else if (req.body.email !== regexEmail) {
     res.status(400).send({ 
       message: "Echec de l'inscription, requête mal formulée"
      });
-    return;
-  } 
+  }
   bcrypt.hash(req.body.password, 10)
     .then(hash => {
       const user = {

@@ -9,10 +9,10 @@
     
     <!--Formulaire de connexion-->
     <b-row align-h="center">
-      <b-col lg="8">        
+      <b-col md="10" lg="8">        
         <h2 class="mb-3" align="center">Connectez-vous</h2>
         <b-row>
-          <b-col offset="1" cols="10" offset-sm="1" sm="10" offset-md="1" md="10" offset-lg="2" lg="8">
+          <b-col cols="12" offset-sm="1" sm="10" offset-md="1" md="10" offset-lg="2" lg="8">
             <b-card align="center" class="identification-box">  
               <div align="center">
                 <b-form>
@@ -25,12 +25,18 @@
                 </b-form>
               </div>
             </b-card>
-            <p class="error-message font-weight-bold text-center mt-3">{{ error }}</p>
-            <p align="center">Pas de compte ? <router-link to="/signup">S'inscrire</router-link>
-              <b-button pill class="submit-button ml-5" type="submit" @click="login">Se connecter</b-button>
-            </p>
+              <p class="error-message font-weight-bold text-center mt-2">{{ error }}</p>
+            
           </b-col>
         </b-row> 
+        <b-row class="mt-2 switch-page">
+              <b-col align="center" cols="12" offset-sm="1" sm="6" offset-md="2" md="5" offset-lg="2" lg="5">
+                <p>Pas de compte ? <router-link to="/signup">S'inscrire</router-link></p>
+              </b-col>
+              <b-col align="center" class="mb-3" cols="12" sm="4" md="3" lg="3">
+                <b-button pill class="submit-button" type="submit" @click="login">Se connecter</b-button>
+              </b-col>
+            </b-row>  
       </b-col>
     </b-row>
   </b-container>
@@ -43,8 +49,8 @@ export default {
   name: "Login",
   data() {
       return {
-        email: 'emilie@email.fr',//nikola@email.fr, 
-        password: 'emilietest1',//nikolatest1, emilietest1
+        email: 'admin@email.fr',//emilie@email.fr, nikola@email.fr, , test2@email.fr
+        password: 'admintest1',//emilietest1, nikolatest1, , testtest1
         error: '',  
       }
   },
@@ -79,13 +85,16 @@ export default {
   h1 {
     font-size: 1.5em;
   }
+  h2 {
+    font-size: 1.4em;
+  }
   .submit-button {
     background-color: #ffd7d7;
     color: black;
     border: solid 1px #fd2d01;
   }
   .submit-button:hover {
-      background: #ffb3b3;
+    background: #ffb3b3;
   }
   .error-message {
     color: #fd2d01;
@@ -93,19 +102,40 @@ export default {
   .input {
     width: 20em;
   }
-
-  @media screen and (max-width: 580px) {
+  .input:hover {
+    outline: none !important;
+    border: solid 1px #fd2d01;
+    box-shadow: 0 0 10px  #ffd7d7;
+  }
+  .switch-page {
+    line-height: 50px;
+  }
+   @media screen and (max-width: 870px) {
     .icon-name {
-      height: 180px;
+      height: 200px;
     }
     h1 {
       font-size: 1.2em;
     }
     h2 {
-      font-size: 1em;
+      font-size: 1.3em;
+    }
+   }
+  @media screen and (max-width: 560px) {
+    .icon-name {
+      height: 150px;
+    }
+    h1 {
+      font-size: 1.2em;
+    }
+    h2 {
+      font-size: 1.2em;
     }
     .input {
-    width: 12em;
+      width: 15.5em;
+    }
+    .switch-page {
+    line-height: 30px;
     }
   }
 </style>
