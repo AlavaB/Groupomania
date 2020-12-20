@@ -3,25 +3,14 @@
     <b-navbar class="pt-3" toggleable="sm" type="light">
       <b-navbar-brand @click="reloadPage">
         <router-link to="/">
-          <img
-            class="logo"
-            src="../assets/images/icon-header.png"
-            alt="Logo and company name"
-          />
+          <img class="logo" src="../assets/images/icon-header.png" alt="Logo and company name" />
         </router-link>
       </b-navbar-brand>
-      <b-navbar-toggle
-        class="nav-collapse"
-        target="nav-collapse"
-      ></b-navbar-toggle>
+      <b-navbar-toggle class="nav-collapse" target="nav-collapse"></b-navbar-toggle>
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav class="ml-auto">
-          <b-nav-item v-show="!displayProfile" @click="switchDisplayProfile"
-            >Profil</b-nav-item
-          >
-          <b-nav-item v-show="displayProfile" @click="switchDisplayProfile"
-            >Forum</b-nav-item
-          >
+          <b-nav-item v-show="!displayProfile" @click="switchDisplayProfile">Profil</b-nav-item>
+          <b-nav-item v-show="displayProfile" @click="switchDisplayProfile">Forum</b-nav-item>
           <b-nav-item @click="logout">Déconnexion</b-nav-item>
         </b-navbar-nav>
       </b-collapse>

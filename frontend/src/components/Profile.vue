@@ -4,15 +4,7 @@
       <b-col lg="8">
         <h1 align="center" class="mb-4">Mon profil</h1>
         <b-row>
-          <b-col
-            cols="12"
-            offset-sm="1"
-            sm="10"
-            offset-md="2"
-            md="8"
-            offset-lg="2"
-            lg="8"
-          >
+          <b-col cols="12" offset-sm="1" sm="10" offset-md="2" md="8" offset-lg="2" lg="8">
             <b-card class="identification-box">
               <!--Gestion de l'image-->
               <div align="center" class="mb-3">
@@ -22,16 +14,13 @@
                   title="Modifier la photo de profil"
                   :style="{ 'background-image': `url(${imageData})` }"
                   @click="chooseImage"
+                  alt="User image"
                 >
                   <span v-if="!imageData" class="placeholder"></span>
-                  <input
-                    class="file-input"
-                    ref="fileInput"
-                    type="file"
-                    @input="onSelectFile"
-                  />
+                  <input class="file-input" ref="fileInput" type="file" @input="onSelectFile" />
                 </div>
               </div>
+
               <!--Formulaire-->
               <div align="center">
                 <label for="pseudo">Pseudo</label>
@@ -40,8 +29,7 @@
                   class="mb-3 input"
                   v-model="user.pseudo"
                   placeholder="Mon pseudo"
-                >
-                </b-form-input>
+                ></b-form-input>
                 <label for="email-adress">Adresse email</label>
                 <b-form-input
                   id="input-2"
@@ -49,8 +37,7 @@
                   v-model="user.email"
                   type="email"
                   placeholder="Mon adresse email"
-                >
-                </b-form-input>
+                ></b-form-input>
               </div>
               <div align="center">
                 <b-button
@@ -59,10 +46,8 @@
                   pill
                   size="sm"
                   class="modify-password mt-2"
-                  >Modifier mon mot de passe
-                </b-button>
+                >Modifier mon mot de passe</b-button>
               </div>
-
               <div align="center" v-show="!displayModifyPassword">
                 <label for="password">Mot de passe</label>
                 <b-form-input
@@ -71,37 +56,21 @@
                   v-model="password"
                   type="password"
                   placeholder="Nouveau mot de passe"
-                >
-                </b-form-input>
+                ></b-form-input>
               </div>
             </b-card>
+            <p class="error-message font-weight-bold text-center mt-2">{{ error }}</p>
           </b-col>
         </b-row>
         <b-row class="mt-4" align="center">
-          <b-col
-            offset="1"
-            cols="5"
-            offset-sm="3"
-            sm="3"
-            offset-md="3"
-            md="3"
-            offset-lg="3"
-            lg="3"
-          >
+          <b-col offset="1" cols="5" offset-sm="3" sm="3" offset-md="3" md="3" offset-lg="3" lg="3">
             <div>
-              <b-button
-                pill
-                @click="cancelModification"
-                class="ml-3 reset-button"
-                >Annuler</b-button
-              >
+              <b-button pill @click="cancelModification" class="ml-3 reset-button">Annuler</b-button>
             </div>
           </b-col>
           <b-col cols="5" sm="3" md="3" lg="3">
             <div>
-              <b-button pill @click="modifyUser" class="send-button"
-                >Modifier</b-button
-              >
+              <b-button pill @click="modifyUser" class="send-button">Modifier</b-button>
             </div>
           </b-col>
         </b-row>
@@ -113,8 +82,7 @@
                 size="sm"
                 class="mb-3 delete-button"
                 @click="deleteUser"
-                >Supprimer mon profil</b-button
-              >
+              >Supprimer mon profil</b-button>
             </div>
           </b-col>
         </b-row>
@@ -136,6 +104,7 @@ export default {
       user: {},
       uri: "users/" + this.userId,
       file: "",
+      error: "",
       headers: {
         headers: {
           Authorization: this.token,
@@ -190,10 +159,7 @@ export default {
         this.file = this.$refs.fileInput.files[0];
       }
     },
-    handleFileUpload() {
-      this.file = this.$refs.fileInput.files[0];
-    },
-    switchDisplayProfile() {
+    switchDisplayProfile() {//dès que clic sur modifier ou anuler retour au forum
       let emitDisplayProfile = !this.displayProfile;
       this.$emit("display-profile", emitDisplayProfile);
     },
@@ -201,15 +167,10 @@ export default {
       this.displayModifyPassword = !this.displayModifyPassword;
     },
     getUser() {
-      this.$http
-        .get(url + "users/" + this.userId, this.headers)
-        .then((res) => {
-          this.user = res.data;
-          this.imageData = res.data.profilePicture;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      this.$http.get(url + "users/" + this.userId, this.headers).then((res) => {
+        this.user = res.data;
+        this.imageData = res.data.profilePicture;
+      });
     },
     modifyUser() {
       let formData = new FormData();
@@ -220,15 +181,14 @@ export default {
       if (this.body.password) {
         formData.append("password", this.body.password);
       }
-      this.$http
-        .put(url + this.uri, formData, this.headers)
+      this.$http.put(url + this.uri, formData, this.headers)
         .then(() => {
           this.$parent.getPosts();
           this.switchDisplayProfile();
           this.$refs.fileInput.value = "";
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
+          this.error = "Un problème est survenu, veuillez réessayer";
         });
     },
     cancelModification() {
@@ -238,17 +198,16 @@ export default {
       this.imageData = this.user.profilePicture;
     },
     deleteUser() {
-      let deleteConfirm = confirm(
+      let deleteConfirm = confirm(//apparition de la fenetre 
         "Attention. Toutes vos données seront supprimées. Cette action est irréversible."
       );
       if (deleteConfirm) {
-        this.$http
-          .delete(url + this.uri, this.headers)
+        this.$http.delete(url + this.uri, this.headers)
           .then(() => {
             this.logout();
           })
-          .catch((err) => {
-            console.log(err);
+          .catch(() => {
+            this.error = "Un problème est survenu, veuillez réessayer";
           });
       }
     },
@@ -289,7 +248,6 @@ export default {
   background: #ffe4e4;
   color: #fd2d01;
 }
-
 .delete-button {
   background-color: transparent;
   border: solid 1px #ffb3b3;
@@ -297,6 +255,9 @@ export default {
 }
 .delete-button:hover {
   background: #ffe4e4;
+  color: #fd2d01;
+}
+.error-message {
   color: #fd2d01;
 }
 .base-image-input {

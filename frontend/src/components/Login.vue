@@ -2,29 +2,17 @@
   <b-container>
     <b-row align-h="center">
       <b-col class="text-center" sm="10" lg="8">
-        <img
-          class="icon-name"
-          src="../assets/images/icon-name.png"
-          alt="Logo and company name"
-        />
+        <img class="icon-name" src="../assets/images/icon-name.png" alt="Logo and company name" />
         <h1 class="pb-4">Bienvenue sur votre réseau social d'entreprise</h1>
       </b-col>
-    </b-row> 
+    </b-row>
     <b-row align-h="center">
       <b-col cols="12" sm="10" md="10" lg="8">
         <h2 class="mb-3" align="center">Connectez-vous</h2>
-        
+
         <!--Formulaire de connexion-->
         <b-row>
-          <b-col
-            cols="12"
-            offset-sm="1"
-            sm="10"
-            offset-md="2"
-            md="8"
-            offset-lg="2"
-            lg="8"
-          >
+          <b-col cols="12" offset-sm="1" sm="10" offset-md="2" md="8" offset-lg="2" lg="8">
             <b-card align="center" class="identification-box">
               <div align="center">
                 <b-form>
@@ -37,8 +25,7 @@
                     required
                     placeholder="Entrez votre adresse email"
                     @keyup.enter="login"
-                  >
-                  </b-form-input>
+                  ></b-form-input>
                   <label for="password">Mot de passe *</label>
                   <b-form-input
                     class="input"
@@ -48,17 +35,13 @@
                     required
                     placeholder="Entrez votre mot de passe"
                     @keyup.enter="login"
-                  >
-                  </b-form-input>
+                  ></b-form-input>
                 </b-form>
               </div>
             </b-card>
-            <p class="error-message font-weight-bold text-center mt-2">
-              {{ error }}
-            </p>
+            <p class="error-message font-weight-bold text-center mt-2">{{ error }}</p>
           </b-col>
         </b-row>
-
         <b-row class="mt-2 switch-page">
           <b-col
             align="center"
@@ -71,13 +54,12 @@
             lg="5"
           >
             <p>
-              Pas de compte ? <router-link to="/signup">S'inscrire</router-link>
+              Pas de compte ?
+              <router-link to="/signup">S'inscrire</router-link>
             </p>
           </b-col>
           <b-col align="center" class="mb-3" cols="12" sm="4" md="3" lg="3">
-            <b-button pill class="submit-button" type="submit" @click="login"
-              >Se connecter</b-button
-            >
+            <b-button pill class="submit-button" type="submit" @click="login">Connexion</b-button>
           </b-col>
         </b-row>
       </b-col>
@@ -98,7 +80,8 @@ export default {
     };
   },
   methods: {
-    /**Fonction de connexion avec appel à Axios via http et enregistrement dans le local storage*/
+    /** A SUPPRIMER Fonction de connexion avec appel à Axios via http et enregistrement dans le local storage*/
+    //Fonction de connexion
     login() {
       const user = {
         email: this.email,
@@ -112,10 +95,14 @@ export default {
             this.$router.push("/");
           }
         })
-        .catch(() => {
+        .catch((err) => {
           localStorage.clear();
-          this.error =
-            "Nous ne pouvons pas vous connecter. Vérifiez vos identifiants.";
+          if (err.response.status === 401) {
+            this.error =
+              "Nous ne pouvons pas vous connecter. Vérifiez vos identifiants.";
+          } else {
+            this.error = "Un problème est survenu, veuillez réessayer";
+          }
         });
     },
   },
@@ -193,7 +180,7 @@ h2 {
     display: none;
   }
   .input {
-    width: 14em;
+    width: 15em;
   }
 }
 </style>

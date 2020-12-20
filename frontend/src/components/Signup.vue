@@ -2,11 +2,9 @@
   <b-container>
     <b-row align-h="center">
       <b-col class="text-center" sm="10" lg="8">
-        <img
-          class="icon-name"
-          src="../assets/images/icon-name.png"
-          alt="Logo and company name"
-        />
+        <router-link to="/login">
+          <img class="icon-name" src="../assets/images/icon-name.png" alt="Logo and company name" />
+        </router-link>
         <h1 class="pb-4">Bienvenue sur votre réseau social d'entreprise</h1>
       </b-col>
     </b-row>
@@ -16,15 +14,7 @@
       <b-col cols="12" sm="10" md="10" lg="8">
         <h2 class="mb-3" align="center">Inscrivez-vous</h2>
         <b-row>
-          <b-col
-            cols="12"
-            offset-sm="1"
-            sm="10"
-            offset-md="1"
-            md="10"
-            offset-lg="2"
-            lg="8"
-          >
+          <b-col cols="12" offset-sm="1" sm="10" offset-md="1" md="10" offset-lg="2" lg="8">
             <b-card class="identification-box">
               <div align="center">
                 <b-form>
@@ -33,39 +23,40 @@
                     id="input-1"
                     class="mb-3 input"
                     v-model="pseudo"
+                    maxlength="10"
+                    @input="lenghtCheck(10, pseudo, 'pseudo')"
                     required
                     placeholder="Entrez votre pseudo"
                     @keyup.enter="signup"
-                  >
-                  </b-form-input>
+                  ></b-form-input>
                   <label for="email-adress">Adresse email *</label>
                   <b-form-input
                     id="input-2"
                     class="mb-3 input"
                     v-model="email"
                     type="email"
+                    maxlength="30"
+                    @input="lenghtCheck(30, email, 'email')"
                     required
                     placeholder="Entrez votre adresse email"
                     @keyup.enter="signup"
-                  >
-                  </b-form-input>
+                  ></b-form-input>
                   <label for="password">Mot de passe *</label>
                   <b-form-input
                     id="input-3"
                     class="input"
                     v-model="password"
                     type="password"
+                    maxlength="16"
+                    @input="lenghtCheck(16, password, 'mot de passe')"
                     required
                     placeholder="Entrez votre mot de passe"
                     @keyup.enter="signup"
-                  >
-                  </b-form-input>
+                  ></b-form-input>
                 </b-form>
               </div>
             </b-card>
-            <p class="error-message font-weight-bold text-center mt-2">
-              {{ error }}
-            </p>
+            <p class="error-message font-weight-bold text-center mt-2">{{ error }}</p>
           </b-col>
         </b-row>
         <b-row class="mt-2 switch-page">
@@ -80,20 +71,18 @@
             lg="5"
           >
             <p>
-              Déjà inscrit ? <router-link to="/login">Se connecter</router-link>
+              Déjà inscrit ?
+              <router-link to="/login">Se connecter</router-link>
             </p>
           </b-col>
           <b-col align="center" class="mb-3" cols="12" sm="4" md="3" lg="3">
-            <b-button pill class="submit-button" type="submit" @click="signup"
-              >S'inscrire</b-button
-            >
+            <b-button pill class="submit-button" type="submit" @click="signup">Inscription</b-button>
           </b-col>
         </b-row>
       </b-col>
     </b-row>
   </b-container>
 </template>
-
 
 <script>
 import { url } from "../main";
@@ -113,6 +102,15 @@ export default {
     };
   },
   methods: {
+    //Fonction de vérification de la longueur des données
+    lenghtCheck(length, object, message) {
+      if (object.length === length) {
+        this.error = "Votre " + message + " est trop long";
+      } else {
+        this.error = "";
+      }
+    },
+    //Fonction d'inscription
     signup() {
       let newUser = {
         pseudo: this.pseudo,
@@ -123,39 +121,34 @@ export default {
       if (!this.emailRegex.test(this.email)) {
         return (this.error = "Vous devez renseigner une adresse email valide");
       } else if (!this.pseudoRegex.test(this.pseudo)) {
-        //TODO pseudo unicité
         return (this.error =
           "Votre pseudo doit contenir au moins 3 caractères");
       } else if (!this.passwordRegex.test(this.password)) {
         return (this.error =
           "Votre mot de passe doit contenir au moins 8 caractères et au moins 1 lettre et 1 chiffre");
       }
-      this.$http
-        .post(url + "users", newUser)
+      this.$http.post(url + "users", newUser)
         .then((res) => {
           if (res.status === 200) {
-            this.$http
-              .post(url + "users/login", newUser)
+            this.$http.post(url + "users/login", newUser)//si inscription fonctionne = login
               .then((res) => {
                 if (res.status === 200) {
                   localStorage.setItem("currentUser", JSON.stringify(res.data));
                   this.$router.push("/");
                 }
               })
-              .catch((err) => {
+              .catch(() => {
                 localStorage.clear();
-                this.error = err.response.data.title; //TODO erreur
+                this.error = "Un problème est survenu, veuillez réessayer"; 
               });
           }
         })
         .catch((err) => {
-          this.error = err;
-          /*if (err = "email unicity problem") {
-          this.error = "Adresse email déjà utilisée"
-        } else {
-          err
-        }*/
-          //this.error = err.response.data.title;TODO erreur
+          if (err.response.status === 409) {
+            this.error = "Adresse email déjà utilisée";
+          } else {
+            this.error = "Un problème est survenu, veuillez réessayer";
+          }
         });
     },
   },
@@ -233,7 +226,7 @@ h2 {
     display: none;
   }
   .input {
-    width: 14em;
+    width: 15em;
   }
 }
 </style>

@@ -1,14 +1,7 @@
 <template>
   <b-container>
     <b-row>
-      <b-col
-        sm="12"
-        offset-md="1"
-        md="10"
-        offset-lg="2"
-        lg="8"
-        class="post mb-4"
-      >
+      <b-col sm="12" offset-md="1" md="10" offset-lg="2" lg="8" class="post mb-4">
         <div class="post-header mb-3">
           <div
             class="profile-picture mr-4"
@@ -17,9 +10,11 @@
             alt="User image"
           ></div>
           <p class="mb-0" align="center">
-            <span class="user-name font-weight-bolder" @click="getUsersPosts">{{
+            <span class="user-name font-weight-bolder" @click="getUsersPosts">
+              {{
               post.user
-            }}</span>
+              }}
+            </span>
             le {{ post.creationDate }}
           </p>
         </div>
@@ -34,15 +29,8 @@
               :style="{ 'background-image': `url(${imageData})` }"
               @click="chooseImage"
             >
-              <span v-if="!imageData" class="image-area"
-                >Insérer une image</span
-              >
-              <input
-                class="file-input"
-                ref="fileInput"
-                type="file"
-                @input="onSelectFile"
-              />
+              <span v-if="!imageData" class="image-area">Insérer une image</span>
+              <input class="file-input" ref="fileInput" type="file" @input="onSelectFile" />
             </div>
             <a
               @click="removeImage"
@@ -50,54 +38,25 @@
               class="remove-image"
               href="#"
               style="display: inline"
-              >&#215;</a
-            >
+            >&#215;</a>
           </b-col>
           <b-col cols="8" sm="8=9" md="8" lg="8" align="center">
-            <b-form-textarea
-              class="text-area"
-              rows="3"
-              v-model="modifyTextArea"
-            >
-            </b-form-textarea>
+            <b-form-textarea class="text-area" rows="3" maxlength="2047" @input="lenghtCheck" v-model="modifyTextArea"></b-form-textarea>
+            <p align="center" class="error-message font-weight-bold mt-2">{{ error }}</p>
           </b-col>
           <b-col cols="12" sm="12" md="2" lg="2" align="center">
             <div class="button-col">
-              <b-button
-                pill
-                size="sm"
-                class="mb-3 send-button"
-                @click="modifyPost"
-                >Envoyer</b-button
-              >
-              <b-button
-                pill
-                size="sm"
-                class="mb-3 reset-button"
-                @click="resetModifyPost"
-                >Annuler</b-button
-              >
+              <b-button pill size="sm" class="mb-3 send-button" @click="modifyPost">Envoyer</b-button>
+              <b-button pill size="sm" class="mb-3 reset-button" @click="resetModifyPost">Annuler</b-button>
             </div>
           </b-col>
         </b-row>
 
-        <!-- Affichage -->
+        <!-- Vue affichage -->
         <b-row v-show="!displayModifyPost">
-          <b-col
-            align="center"
-            cols="12"
-            sm="12"
-            md="3"
-            lg="3"
-            v-show="displayPostImage"
-          >
+          <b-col align="center" cols="12" sm="12" md="3" lg="3" v-show="displayPostImage">
             <div class="post-image">
-              <img
-                id="modifyImage"
-                class="image-styling"
-                :src="postImage"
-                alt="Posted image"
-              />
+              <img id="modifyImage" class="image-styling" :src="postImage" alt="Posted image" />
             </div>
           </b-col>
           <b-col cols="12" sm="10" md="7" lg="7" v-show="displayPostImage">
@@ -109,22 +68,12 @@
           <b-col cols="12" sm="2" md="2" lg="2">
             <div align="center">
               <b-button-group v-show="displayDropdownButton">
-                <b-dropdown
-                  variant="outline-danger"
-                  size="sm"
-                  right
-                  text=". . ."
-                >
-                  <b-dropdown-item
-                    v-if="userId === post.userId"
-                    @click="displaySwitch"
-                    >Modifier</b-dropdown-item
-                  >
+                <b-dropdown variant="outline-danger" size="sm" right text=". . .">
+                  <b-dropdown-item v-if="userId === post.userId" @click="displaySwitch">Modifier</b-dropdown-item>
                   <b-dropdown-item
                     v-if="admin || userId === post.userId"
                     @click="deletePost"
-                    >Supprimer</b-dropdown-item
-                  >
+                  >Supprimer</b-dropdown-item>
                 </b-dropdown>
               </b-button-group>
             </div>
@@ -150,6 +99,7 @@ export default {
       userProfilePicture: this.post.userProfilePicture,
       uri: "posts/" + this.post.id,
       file: "",
+      error: "",
       headers: {
         headers: {
           Authorization: this.token,
@@ -159,22 +109,22 @@ export default {
     };
   },
   computed: {
-    postImage() {
+    postImage() {//image du post
       return this.post.image;
     },
-    body() {
+    body() {//content du post pour envoyer à l'api
       return {
         content: this.modifyTextArea,
       };
     },
-    displayPostImage() {
+    displayPostImage() {//si image ou pas diférent affichage
       if (this.post.image) {
         return true;
       } else {
         return false;
       }
     },
-    displayRemoveImage() {
+    displayRemoveImage() {//affichage de la croix
       if (this.imageData) {
         return true;
       } else {
@@ -182,7 +132,7 @@ export default {
       }
     },
   },
-  props: {
+  props: {//enfant
     post: {
       type: Object,
     },
@@ -201,9 +151,15 @@ export default {
   },
 
   methods: {
+    lenghtCheck() {
+      if (this.modifyTextArea.length === 2047) {
+        this.error = "Votre message est trop long";
+      } else {
+        this.error = "";
+      }
+    },
     getUsersPosts() {
-      this.$http
-        .get(url + "posts/users/" + this.post.userId, this.headers)
+      this.$http.get(url + "posts/users/" + this.post.userId, this.headers)
         .then((res) => {
           this.$emit("users-posts", res.data);
           this.$emit("post-by-profile", true);
@@ -229,42 +185,51 @@ export default {
       this.file = "delete";
       this.imageData = "";
     },
-
+    //affiche le dropbutton si propre use ou admin sinon pas d'affichage
     switchDropdownButton() {
       if (this.admin === true || this.userId === this.post.userId) {
         this.displayDropdownButton = !this.displayDropdownButton;
       }
     },
 
-    displaySwitch() {
+    displaySwitch() {//permet de passer de l'affichage du post à la modification
       (this.displayModifyPost = !this.displayModifyPost),
         (this.displayDropdownButton = !this.displayDropdownButton);
     },
 
-    getOnePost() {
-      this.$http
-        .get(url + "posts/" + this.post.id, this.headers)
+    getOnePost() {//rafraichir le post après annulation de modification
+      this.$http.get(url + "posts/" + this.post.id, this.headers)
         .then((res) => {
           this.modifyTextArea = res.data.content;
         });
     },
 
     deletePost() {
-      this.$http.delete(url + this.uri, this.headers).then(() => {
-        this.$parent.getPosts();
-      });
+      this.$http.delete(url + this.uri, this.headers)
+        .then(() => {
+          this.$parent.getPosts();
+        })
+        .catch(() => {
+          this.error = "Un problème est survenu, veuillez réessayer";
+        });
     },
 
     sendModifyPost(data) {
-      this.$http.put(url + this.uri, data, this.headers).then(() => {
-        this.$parent.getPosts();
-        this.$refs.fileInput.value = "";
-        this.displaySwitch();
-      });
+      this.$http.put(url + this.uri, data, this.headers)
+        .then(() => {
+          this.$parent.getPosts();//rafraichir tous les posts
+          this.$refs.fileInput.value = "";
+          this.displaySwitch();
+        })
+        .catch(() => {
+          this.error = "Un problème est survenu, veuillez réessayer";
+        });
     },
 
     modifyPost() {
-      if (this.file === "delete") {
+      if ((this.file === "delete" || this.file === "") && this.body.content === "") {//si vide je supprime
+        this.deletePost()
+      } else if (this.file === "delete") {
         let formData = new FormData();
         formData.append("image", "delete");
         formData.append("content", this.body.content);
@@ -293,6 +258,7 @@ export default {
 }
 .post-content {
   padding-bottom: 10px;
+  word-wrap: break-word;
 }
 .post-header {
   line-height: 30px;
@@ -308,6 +274,8 @@ export default {
 .profile-picture {
   width: 2em;
   height: 2em;
+  margin-bottom: 4px;
+  margin-top: 4px;
   cursor: pointer;
   vertical-align: middle;
   background-size: cover;
@@ -347,6 +315,9 @@ export default {
 .button-col {
   display: flex;
   flex-direction: column;
+}
+.error-message {
+  color: #fd2d01;
 }
 .post-image {
   max-width: 10em;

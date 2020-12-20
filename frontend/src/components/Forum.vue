@@ -1,9 +1,6 @@
 <template>
   <b-container display="flex">
-    <Header
-      @display-profile="switchDisplayProfile"
-      :displayProfile="displayProfile"
-    />
+    <Header @display-profile="switchDisplayProfile" :displayProfile="displayProfile" />
     <Profile
       @display-profile="switchDisplayProfile"
       v-show="displayProfile"
@@ -22,12 +19,7 @@
             @click="chooseImage"
           >
             <span v-if="!imageData" class="image-area">Insérer une image</span>
-            <input
-              class="file-input"
-              ref="file"
-              type="file"
-              @input="onSelectFile"
-            />
+            <input class="file-input" ref="file" type="file" @input="onSelectFile" />
           </div>
           <a
             @click="removeImage"
@@ -35,8 +27,7 @@
             class="remove-image"
             href="#"
             style="display: inline"
-            >&#215;</a
-          >
+          >&#215;</a>
         </b-col>
         <b-col cols="8" sm="9" md="8" lg="8">
           <b-form-textarea
@@ -47,32 +38,19 @@
             rows="3"
             class="text-area"
             v-model="postTextArea"
-          >
-          </b-form-textarea>
-          <p>{{ postError }}</p>
+          ></b-form-textarea>
+          <p class="error-message font-weight-bold text-center mt-2">{{ postError }}</p>
         </b-col>
         <b-col cols="12" sm="12" md="2" lg="2" align="center">
           <div class="button-col">
-            <b-button
-              pill
-              size="sm"
-              class="mb-3 send-button"
-              @click="createPost"
-              >Envoyer</b-button
-            >
-            <b-button
-              pill
-              size="sm"
-              class="mb-3 reset-button"
-              @click="resetPost"
-              >Annuler</b-button
-            >
+            <b-button pill size="sm" class="mb-3 send-button" @click="createPost">Envoyer</b-button>
+            <b-button pill size="sm" class="mb-3 reset-button" @click="resetPost">Annuler</b-button>
           </div>
         </b-col>
       </b-row>
     </div>
 
-    <!--Affichage du profil utilisateur-->
+    <!--Affichage de l'en-tête d'un utilisateur-->
     <b-row v-show="displayPostByProfile" class="mb-4">
       <b-col align="center" offset-lg="2" lg="3">
         <div
@@ -93,18 +71,13 @@
               switchDisplayPostByProfile(false);
               getPosts();
             "
-            >Retour vers le forum</b-button
-          >
+          >Retour vers le forum</b-button>
         </div>
       </b-col>
     </b-row>
 
-    <!--Affichage des posts utilisateur-->
-    <b-row
-      v-for="postData in posts"
-      :key="postData.id"
-      v-show="!displayProfile"
-    >
+    <!--Affichage des posts d'un ou de plusieurs utilisateurs-->
+    <b-row v-for="postData in posts" :key="postData.id" v-show="!displayProfile">
       <b-col>
         <Post
           @users-posts="usersPosts"
@@ -155,13 +128,19 @@ export default {
     };
   },
   watch: {
-    posts: function () {
-      if (this.posts !== "undefined" && this.posts.length > 0) {
+    //Surveille les posts dans le cas de rechargement des posts (surtout pour en-tête profil post par user)
+    posts() {
+      if (this.posts !== "undefined" && this.posts.length > 0) {//evite erreur si aucun post publié
         this.userProfilePicture = this.posts[0].userProfilePicture;
         this.userName = this.posts[0].user;
-        this.userEmail = this.posts[0].email;
+        if (this.posts[0].email.startsWith("ancien employé")) {
+          this.userEmail = "";
+        } else {
+          this.userEmail = this.posts[0].email;
+        }
       }
     },
+    //Permet de ne pas afficher le profil et en-tête post par profil en même temps
     displayProfile() {
       if (this.displayProfile === true) {
         this.displayPostByProfile = false;
@@ -169,9 +148,11 @@ export default {
     },
   },
   computed: {
+    //construction des headers
     headers() {
-      return { headers: { Authorization: this.token, userId: this.userId } }; // voir si necessaire 'content-type': 'multipart/form-data'
+      return { headers: { Authorization: this.token, userId: this.userId } };
     },
+    //data dynamique qui contrôle l'affichage de la croix de suppression de l'image
     displayRemoveImage() {
       if (this.imageData) {
         return true;
@@ -180,10 +161,11 @@ export default {
       }
     },
   },
-
+  //Validation du state de l'utilisateur
   created() {
     this.getUser();
   },
+  //construction du composant post (récupération des posts)
   mounted() {
     this.getPosts();
   },
@@ -196,14 +178,14 @@ export default {
         this.postError = "";
       }
     },
-    removeImage() {
+    removeImage() {//au clic sur la croix
       this.file = "";
       this.imageData = null;
     },
-    chooseImage() {
+    chooseImage() {//accès au stockage du navigateur
       this.$refs.file.click();
     },
-    onSelectFile() {
+    onSelectFile() {//fonction qui récupère l'image du stockage du navigateur pour la préparer pour l'afficher et l'enregistrer 
       const input = this.$refs.file;
       const files = input.files;
       if (files && files[0]) {
@@ -215,10 +197,10 @@ export default {
         this.file = this.$refs.file.files[0];
       }
     },
-    createPost() {
+    createPost() {//au clic d'envoyer
       if (!this.postTextArea && !this.imageData) {
-        this.postError = "Votre post est vide";
-        setTimeout(() => {
+        this.postError = "Votre publication est vide";
+        setTimeout(() => {//afficher le message pendant 3 secondes
           this.postError = "";
         }, 3000);
         return;
@@ -227,17 +209,21 @@ export default {
       formData.append("image", this.file);
       formData.append("content", this.postTextArea);
       formData.append("user_id", this.userId);
-      this.$http.post(url + "posts", formData, this.headers).then(() => {
-        this.resetPost();
-        this.getPosts();
-      });
+      this.$http.post(url + "posts", formData, this.headers)
+        .then(() => {
+          this.resetPost();
+          this.getPosts();
+        })
+        .catch(() => {
+          this.postError = "Un problème est survenu, veuillez réessayer";
+        });
     },
-    getPosts() {
+    getPosts() {//utilisée pour charger les posts et pour recharger le conposant
       this.$http.get(url + "posts", this.headers).then((res) => {
         this.posts = res.data;
       });
     },
-    usersPosts(data) {
+    usersPosts(data) {//charger post par utilisateur
       this.posts = data;
     },
     switchDisplayPostByProfile(data) {
@@ -246,19 +232,18 @@ export default {
     switchDisplayProfile(data) {
       this.displayProfile = data;
     },
-    //Validation du state de l'utilisateur
+    //lancé a created pour vérifier l'authenticité du user et si admin ou pas
     getUser() {
       const currentUser = JSON.parse(localStorage.getItem("currentUser"));
       if (currentUser) {
         this.token = currentUser.token;
         this.userId = currentUser.userId;
-        this.$http
-          .get(url + "users/" + currentUser.userId, this.headers)
+        this.$http.get(url + "users/" + currentUser.userId, this.headers)
           .then((res) => {
             this.admin = res.data.admin;
           })
           .catch(() => {
-            this.$router.push("/login"); //A voir avec Robin pourquoi on arrive quand même sur le forum vide !
+            this.$router.push("/login");
           });
       } else {
         this.$router.push("/login");
@@ -273,6 +258,12 @@ export default {
   },
 };
 </script>
+
+<style>
+body {
+  font-family: "montserratregular", Arial, Helvetica, sans-serif;
+}
+</style>
 
 <style scoped>
 .text-area {
@@ -316,6 +307,9 @@ export default {
   display: flex;
   width: 7em;
   flex-direction: column;
+}
+.error-message {
+  color: #fd2d01;
 }
 .image-input {
   width: 5.5em;
@@ -392,7 +386,7 @@ export default {
 @media screen and (max-width: 560px) {
   .profile-picture {
     width: 8em;
-    height: 8em; 
+    height: 8em;
   }
   h1 {
     font-size: 2em;

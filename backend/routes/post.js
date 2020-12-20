@@ -9,8 +9,8 @@ module.exports = app => {
     router.get("/:id", auth, posts.getOnePost);
     router.get("/users/:id", auth, posts.getAllUsersPosts);
     router.get("/", auth, posts.getAllPosts);
-    router.put('/:id',  multer, posts.modifyPost);
-    router.delete('/:id', posts.deletePost);
+    router.put('/:id', auth,  multer, posts.modifyPost);
+    router.delete('/:id', auth, posts.deletePost);
 
     app.use('/api/posts', router);
   };
