@@ -84,7 +84,7 @@ exports.modifyPost = (req, res, next) => {
   };
   if (req.file) {
     post.image = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
-  } else {
+  } else if (req.body.image === "delete") {
     post.image = "";
   }
   Post.update(post,

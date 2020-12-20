@@ -11,11 +11,11 @@ const regexEmail = /^(([^<>()\]\\.,;:\s@"]+(\.[^<>()\]\\.,;:\s@"]+)*)|(".+"))@((
 //Création d'un utilisateur
 exports.createUser = (req, res, next) => {
   if (!req.body.email || !req.body.pseudo || !req.body.password) {
-    res.status(400).json({ 
+    res.status(400).send({ 
       message: "Echec de l'inscription, information manquante"
      });
     return;
-  } else if (req.body.email !== regexEmail) {
+  } else if (!regexEmail.test(req.body.email)) {
     res.status(400).send({ 
       message: "Echec de l'inscription, requête mal formulée"
      });

@@ -1,16 +1,27 @@
 <template>
-  <b-container class="mb-4"> 
+  <b-container class="mb-4">
     <b-navbar class="pt-3" toggleable="sm" type="light">
       <b-navbar-brand @click="reloadPage">
-        <router-link to="/"><!--TODO-->
-          <img class="logo" src="../assets/images/icon-header.png" alt="Logo and company name"/>
+        <router-link to="/">
+          <img
+            class="logo"
+            src="../assets/images/icon-header.png"
+            alt="Logo and company name"
+          />
         </router-link>
       </b-navbar-brand>
-      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+      <b-navbar-toggle
+        class="nav-collapse"
+        target="nav-collapse"
+      ></b-navbar-toggle>
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav class="ml-auto">
-          <b-nav-item v-show="!displayProfile" @click="switchDisplayProfile">Profil</b-nav-item>
-          <b-nav-item v-show="displayProfile" @click="switchDisplayProfile">Forum</b-nav-item>
+          <b-nav-item v-show="!displayProfile" @click="switchDisplayProfile"
+            >Profil</b-nav-item
+          >
+          <b-nav-item v-show="displayProfile" @click="switchDisplayProfile"
+            >Forum</b-nav-item
+          >
           <b-nav-item @click="logout">Déconnexion</b-nav-item>
         </b-navbar-nav>
       </b-collapse>
@@ -23,39 +34,39 @@ export default {
   name: "Header",
   props: {
     displayProfile: {
-        type: Boolean
+      type: Boolean,
     },
   },
   methods: {
     switchDisplayProfile() {
       let emitDisplayProfile = !this.displayProfile;
       this.$parent.getPosts();
-      this.$emit('display-profile', emitDisplayProfile)
+      this.$emit("display-profile", emitDisplayProfile);
     },
     disableDisplayProfile() {
-      this.$emit('display-profile', false);
+      this.$emit("display-profile", false);
     },
     reloadPage() {
       location.reload();
     },
     logout() {
       localStorage.clear();
-      this.$router.push('/login');
-    }
-  }
+      this.$router.push("/login");
+    },
+  },
 };
 </script>
 
 <style scoped>
-  .logo {
-      height: 50px;
-  }
-  .nav-item {
-    text-align: end;
-    color: #fd2d01 !important;
-  }
-@media screen and (max-width: 576px) {
-  
+.logo {
+  height: 50px;
 }
-
+.nav-item {
+  text-align: end;
+}
+@media screen and (max-width: 440px) {
+  .nav-item {
+    text-align: start;
+  }
+}
 </style>
