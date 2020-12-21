@@ -39,7 +39,7 @@ exports.getAllUsersPosts = (req, res, next) => {
     ],
   })
     .then((posts) => {
-      const postObject = posts.map((post) => {//création d'un tableau
+      const postObject = posts.map((post) => {      
         return Object.assign({
           id: post.id,
           content: post.content,
@@ -67,7 +67,7 @@ exports.getAllPosts = (req, res, next) => {
     ],
   })
     .then((posts) => {
-      const postObject = posts.map((post) => {//création d'un tableau
+      const postObject = posts.map((post) => {
         return Object.assign({
           id: post.id,
           content: post.content,

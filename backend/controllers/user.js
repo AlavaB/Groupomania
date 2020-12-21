@@ -72,7 +72,7 @@ exports.login = (req, res, next) => {
     .catch((err) => res.status(500).json({ err }));
 };
 
-// Récupérer un utilisateur
+//Récupération d'un utilisateur
 exports.getOneUser = (req, res, next) => {
   const id = req.params.id;
   User.findByPk(id)
@@ -125,7 +125,7 @@ exports.modifyUser = (req, res, next) => {
     .catch((err) => res.status(500).json({ err }));
 };
 
-//Suppression d'un utilisateur
+//Suppression (ou anonymisation) d'un utilisateur
 exports.deleteUser = (req, res, next) => {
   User.update(
     {
@@ -137,8 +137,7 @@ exports.deleteUser = (req, res, next) => {
     },
     {
       where: { id: req.params.id },
-    }
-  )
+    })
     .then((data) => {
       if (data[0] === 0) {
         return res.status(404).json({
@@ -146,7 +145,6 @@ exports.deleteUser = (req, res, next) => {
         });
       } else {
         res.status(200).json({ message: "user deleted" });
-      }
-    })
+      }})
     .catch((err) => res.status(500).json({ err }));
 };

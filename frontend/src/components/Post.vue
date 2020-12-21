@@ -382,8 +382,8 @@ export default {
 }
 @media screen and (max-width: 767px) {
   .post-image {
-    max-width: 8em;
-    max-height: 8em;
+    max-width: 7.5em;
+    max-height: 7.5em;
   }
   .button-col {
     flex-direction: row-reverse;
@@ -391,13 +391,15 @@ export default {
     margin-top: 1em;
   }
 }
-@media screen and (max-width: 560px) {
-  .post-content {
-    margin-top: 1.5em;
-    text-align: center;
-  }
+@media screen and (max-width: 560px) { 
   .post-header {
     font-size: 0.9em;
+  }
+  .post-content {    
+    text-align: center;
+  }
+  .post-image {
+    margin-bottom: 1.5em;
   }
   .button-col {
     margin-top: 1em;
