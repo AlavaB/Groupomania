@@ -41,7 +41,13 @@
             >&#215;</a>
           </b-col>
           <b-col cols="8" sm="8=9" md="8" lg="8" align="center">
-            <b-form-textarea class="text-area" rows="3" maxlength="2047" @input="lenghtCheck" v-model="modifyTextArea"></b-form-textarea>
+            <b-form-textarea
+              class="text-area"
+              rows="3"
+              maxlength="2047"
+              @input="lenghtCheck"
+              v-model="modifyTextArea"
+            ></b-form-textarea>
             <p align="center" class="error-message font-weight-bold mt-2">{{ error }}</p>
           </b-col>
           <b-col cols="12" sm="12" md="2" lg="2" align="center">
@@ -109,22 +115,26 @@ export default {
     };
   },
   computed: {
-    postImage() {//image du post
+    postImage() {
+      //image du post
       return this.post.image;
     },
-    body() {//content du post pour envoyer à l'api
+    body() {
+      //content du post pour envoyer à l'api
       return {
         content: this.modifyTextArea,
       };
     },
-    displayPostImage() {//si image ou pas diférent affichage
+    displayPostImage() {
+      //si image ou pas diférent affichage
       if (this.post.image) {
         return true;
       } else {
         return false;
       }
     },
-    displayRemoveImage() {//affichage de la croix
+    displayRemoveImage() {
+      //affichage de la croix
       if (this.imageData) {
         return true;
       } else {
@@ -132,7 +142,8 @@ export default {
       }
     },
   },
-  props: {//enfant
+  props: {
+    //enfant
     post: {
       type: Object,
     },
@@ -159,7 +170,8 @@ export default {
       }
     },
     getUsersPosts() {
-      this.$http.get(url + "posts/users/" + this.post.userId, this.headers)
+      this.$http
+        .get(url + "posts/users/" + this.post.userId, this.headers)
         .then((res) => {
           this.$emit("users-posts", res.data);
           this.$emit("post-by-profile", true);
@@ -192,20 +204,24 @@ export default {
       }
     },
 
-    displaySwitch() {//permet de passer de l'affichage du post à la modification
+    displaySwitch() {
+      //permet de passer de l'affichage du post à la modification
       (this.displayModifyPost = !this.displayModifyPost),
         (this.displayDropdownButton = !this.displayDropdownButton);
     },
 
-    getOnePost() {//rafraichir le post après annulation de modification
-      this.$http.get(url + "posts/" + this.post.id, this.headers)
+    getOnePost() {
+      //rafraichir le post après annulation de modification
+      this.$http
+        .get(url + "posts/" + this.post.id, this.headers)
         .then((res) => {
           this.modifyTextArea = res.data.content;
         });
     },
 
     deletePost() {
-      this.$http.delete(url + this.uri, this.headers)
+      this.$http
+        .delete(url + this.uri, this.headers)
         .then(() => {
           this.$parent.getPosts();
         })
@@ -215,9 +231,10 @@ export default {
     },
 
     sendModifyPost(data) {
-      this.$http.put(url + this.uri, data, this.headers)
+      this.$http
+        .put(url + this.uri, data, this.headers)
         .then(() => {
-          this.$parent.getPosts();//rafraichir tous les posts
+          this.$parent.getPosts(); //rafraichir tous les posts
           this.$refs.fileInput.value = "";
           this.displaySwitch();
         })
@@ -227,8 +244,12 @@ export default {
     },
 
     modifyPost() {
-      if ((this.file === "delete" || this.file === "") && this.body.content === "") {//si vide je supprime
-        this.deletePost()
+      if (
+        (this.file === "delete" || this.file === "") &&
+        this.body.content === ""
+      ) {
+        //si vide je supprime
+        this.deletePost();
       } else if (this.file === "delete") {
         let formData = new FormData();
         formData.append("image", "delete");
@@ -328,7 +349,6 @@ export default {
   width: 100%;
   object-fit: cover;
 }
-
 .image-input {
   display: block;
   width: 5.5em;
@@ -413,7 +433,6 @@ export default {
   .post-content {
     font-size: 0.9em;
   }
-
   .post-header {
     font-size: 0.8em;
   }

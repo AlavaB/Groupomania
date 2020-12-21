@@ -29,6 +29,8 @@
                   class="mb-3 input"
                   v-model="user.pseudo"
                   placeholder="Mon pseudo"
+                  maxlength="10"
+                  @input="lenghtCheck(10, user.pseudo, 'pseudo')"
                 ></b-form-input>
                 <label for="email-adress">Adresse email</label>
                 <b-form-input
@@ -37,6 +39,8 @@
                   v-model="user.email"
                   type="email"
                   placeholder="Mon adresse email"
+                  maxlength="30"
+                  @input="lenghtCheck(30, user.email, 'email')"
                 ></b-form-input>
               </div>
               <div align="center">
@@ -56,6 +60,8 @@
                   v-model="password"
                   type="password"
                   placeholder="Nouveau mot de passe"
+                  maxlength="16"
+                  @input="lenghtCheck(16, password, 'mot de passe')"
                 ></b-form-input>
               </div>
             </b-card>
@@ -105,6 +111,9 @@ export default {
       uri: "users/" + this.userId,
       file: "",
       error: "",
+      pseudoRegex: /^[a-zA-Z0-9]{3,}$/,
+      emailRegex: /^(([^<>()\]\\.,;:\s@"]+(\.[^<>()\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
+      passwordRegex: /^(?=.*[a-z])(?=.*[0-9])(?=.{8,})/,
       headers: {
         headers: {
           Authorization: this.token,
@@ -127,6 +136,14 @@ export default {
   created() {
     this.getUser();
   },
+  watch: {
+    error() {
+      setTimeout(() => {
+          //afficher le message pendant 3 secondes
+          this.error = "";
+        }, 3000);
+    }
+  },
   computed: {
     body() {
       if (this.password === "" || this.password === null) {
@@ -143,7 +160,15 @@ export default {
       }
     },
   },
+  
   methods: {
+    lenghtCheck(length, object, message) {
+      if (object.length === length) {
+        this.error = "Votre " + message + " est trop long";
+      } else {
+        this.error = "";
+      }
+    },
     chooseImage() {
       this.$refs.fileInput.click();
     },
@@ -159,7 +184,8 @@ export default {
         this.file = this.$refs.fileInput.files[0];
       }
     },
-    switchDisplayProfile() {//dès que clic sur modifier ou anuler retour au forum
+    switchDisplayProfile() {
+      //dès que clic sur modifier ou anuler retour au forum
       let emitDisplayProfile = !this.displayProfile;
       this.$emit("display-profile", emitDisplayProfile);
     },
@@ -173,6 +199,18 @@ export default {
       });
     },
     modifyUser() {
+      if (!this.emailRegex.test(this.body.email)) {
+        return (this.error = "Vous devez renseigner une adresse email valide");
+      } else if (!this.pseudoRegex.test(this.body.pseudo)) {
+        return (this.error =
+          "Votre pseudo doit contenir au moins 3 caractères");
+      } else if (this.body.password) {
+          if (!this.passwordRegex.test(this.password)){
+            return (this.error =
+          "Votre mot de passe doit contenir au moins 8 caractères et au moins 1 lettre et 1 chiffre");
+        }
+      }
+        
       let formData = new FormData();
       formData.append("image", this.file);
       formData.append("pseudo", this.body.pseudo);
@@ -181,7 +219,8 @@ export default {
       if (this.body.password) {
         formData.append("password", this.body.password);
       }
-      this.$http.put(url + this.uri, formData, this.headers)
+      this.$http
+        .put(url + this.uri, formData, this.headers)
         .then(() => {
           this.$parent.getPosts();
           this.switchDisplayProfile();
@@ -198,11 +237,13 @@ export default {
       this.imageData = this.user.profilePicture;
     },
     deleteUser() {
-      let deleteConfirm = confirm(//apparition de la fenetre 
+      let deleteConfirm = confirm(
+        //apparition de la fenetre
         "Attention. Toutes vos données seront supprimées. Cette action est irréversible."
       );
       if (deleteConfirm) {
-        this.$http.delete(url + this.uri, this.headers)
+        this.$http
+          .delete(url + this.uri, this.headers)
           .then(() => {
             this.logout();
           })
@@ -300,7 +341,6 @@ export default {
   border: solid 1px #fd2d01;
   box-shadow: 0 0 10px #ffd7d7;
 }
-
 @media screen and (max-width: 870px) {
   h1 {
     font-size: 2em;

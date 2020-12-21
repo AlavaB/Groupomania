@@ -1,7 +1,7 @@
 <template>
   <b-container class="mb-4">
     <b-navbar class="pt-3" toggleable="sm" type="light">
-      <b-navbar-brand @click="reloadPage">
+      <b-navbar-brand class="header-box" @click="reloadPage">
         <router-link to="/">
           <img class="logo" src="../assets/images/icon-header.png" alt="Logo and company name" />
         </router-link>
@@ -53,9 +53,14 @@ export default {
 .nav-item {
   text-align: end;
 }
-@media screen and (max-width: 440px) {
-  .nav-item {
-    text-align: start;
+@media screen and (max-width: 420px) {
+  .logo {
+    width: 100%;
+    height: 100%;
+  }
+  .header-box {
+    width: 150px;
   }
 }
+
 </style>

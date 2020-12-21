@@ -6,9 +6,10 @@ const path = require("path");
 const app = express();
 
 const db = require("./models/index");
-db.sequelize.sync({ force: false }).then(() => {
+db.sequelize.sync({ force: false })
+  .then(() => {
   console.log("Synchronisation de la base de données");
-});
+  });
 
 app.use(cors());
 

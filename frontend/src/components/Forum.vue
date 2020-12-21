@@ -19,7 +19,7 @@
             @click="chooseImage"
           >
             <span v-if="!imageData" class="image-area">Insérer une image</span>
-            <input class="file-input" ref="file" type="file" @input="onSelectFile" />
+            <input type="file" class="file-input" ref="file" @input="onSelectFile" />
           </div>
           <a
             @click="removeImage"
@@ -130,7 +130,8 @@ export default {
   watch: {
     //Surveille les posts dans le cas de rechargement des posts (surtout pour en-tête profil post par user)
     posts() {
-      if (this.posts !== "undefined" && this.posts.length > 0) {//evite erreur si aucun post publié
+      if (this.posts !== "undefined" && this.posts.length > 0) {
+        //evite erreur si aucun post publié
         this.userProfilePicture = this.posts[0].userProfilePicture;
         this.userName = this.posts[0].user;
         if (this.posts[0].email.startsWith("ancien employé")) {
@@ -178,14 +179,17 @@ export default {
         this.postError = "";
       }
     },
-    removeImage() {//au clic sur la croix
+    removeImage() {
+      //au clic sur la croix
       this.file = "";
       this.imageData = null;
     },
-    chooseImage() {//accès au stockage du navigateur
+    chooseImage() {
+      //accès au stockage du navigateur
       this.$refs.file.click();
     },
-    onSelectFile() {//fonction qui récupère l'image du stockage du navigateur pour la préparer pour l'afficher et l'enregistrer 
+    onSelectFile() {
+      //fonction qui récupère l'image du stockage du navigateur pour la préparer pour l'afficher et l'enregistrer
       const input = this.$refs.file;
       const files = input.files;
       if (files && files[0]) {
@@ -197,10 +201,12 @@ export default {
         this.file = this.$refs.file.files[0];
       }
     },
-    createPost() {//au clic d'envoyer
+    createPost() {
+      //au clic d'envoyer
       if (!this.postTextArea && !this.imageData) {
         this.postError = "Votre publication est vide";
-        setTimeout(() => {//afficher le message pendant 3 secondes
+        setTimeout(() => {
+          //afficher le message pendant 3 secondes
           this.postError = "";
         }, 3000);
         return;
@@ -209,7 +215,8 @@ export default {
       formData.append("image", this.file);
       formData.append("content", this.postTextArea);
       formData.append("user_id", this.userId);
-      this.$http.post(url + "posts", formData, this.headers)
+      this.$http
+        .post(url + "posts", formData, this.headers)
         .then(() => {
           this.resetPost();
           this.getPosts();
@@ -218,12 +225,14 @@ export default {
           this.postError = "Un problème est survenu, veuillez réessayer";
         });
     },
-    getPosts() {//utilisée pour charger les posts et pour recharger le conposant
+    getPosts() {
+      //utilisée pour charger les posts et pour recharger le conposant
       this.$http.get(url + "posts", this.headers).then((res) => {
         this.posts = res.data;
       });
     },
-    usersPosts(data) {//charger post par utilisateur
+    usersPosts(data) {
+      //charger post par utilisateur
       this.posts = data;
     },
     switchDisplayPostByProfile(data) {
@@ -238,7 +247,8 @@ export default {
       if (currentUser) {
         this.token = currentUser.token;
         this.userId = currentUser.userId;
-        this.$http.get(url + "users/" + currentUser.userId, this.headers)
+        this.$http
+          .get(url + "users/" + currentUser.userId, this.headers)
           .then((res) => {
             this.admin = res.data.admin;
           })

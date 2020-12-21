@@ -74,8 +74,8 @@ export default {
   name: "Login",
   data() {
     return {
-      email: "admin@email.fr", //emilie@email.fr, nikola@email.fr, , test2@email.fr
-      password: "admintest1", //emilietest1, nikolatest1, , testtest1
+      email: "admin1@email.fr", //user1@email.fr
+      password: "password1",
       error: "",
     };
   },
@@ -184,5 +184,3 @@ h2 {
   }
 }
 </style>
-    
-
