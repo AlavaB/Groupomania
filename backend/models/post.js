@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
-        unique: true, //UUID = unique user identifier, généré par Sequelize automatiquement
+        unique: true, 
       },
       content: {
         type: DataTypes.STRING(2047),

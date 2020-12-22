@@ -128,7 +128,7 @@ export default {
     };
   },
   watch: {
-    //Surveille les posts dans le cas de rechargement des posts (surtout pour en-tête profil post par user)
+    //Surveille les posts dans le cas de rechargement
     posts() {
       if (this.posts !== "undefined" && this.posts.length > 0) {
         //evite erreur si aucun post publié
@@ -141,7 +141,6 @@ export default {
         }
       }
     },
-    //Permet de ne pas afficher le profil et en-tête post par profil en même temps
     displayProfile() {
       if (this.displayProfile === true) {
         this.displayPostByProfile = false;
@@ -149,7 +148,6 @@ export default {
     },
   },
   computed: {
-    //construction des headers
     headers() {
       return { headers: { Authorization: this.token, userId: this.userId } };
     },
@@ -166,7 +164,7 @@ export default {
   created() {
     this.getUser();
   },
-  //construction du composant post (récupération des posts)
+  //construction du composant post
   mounted() {
     this.getPosts();
   },
@@ -180,12 +178,10 @@ export default {
       }
     },
     removeImage() {
-      //au clic sur la croix
       this.file = "";
       this.imageData = null;
     },
     chooseImage() {
-      //accès au stockage du navigateur
       this.$refs.file.click();
     },
     onSelectFile() {
@@ -202,11 +198,9 @@ export default {
       }
     },
     createPost() {
-      //au clic d'envoyer
       if (!this.postTextArea && !this.imageData) {
         this.postError = "Votre publication est vide";
         setTimeout(() => {
-          //afficher le message pendant 3 secondes
           this.postError = "";
         }, 3000);
         return;
@@ -215,8 +209,7 @@ export default {
       formData.append("image", this.file);
       formData.append("content", this.postTextArea);
       formData.append("user_id", this.userId);
-      this.$http
-        .post(url + "posts", formData, this.headers)
+      this.$http.post(url + "posts", formData, this.headers)
         .then(() => {
           this.resetPost();
           this.getPosts();
@@ -226,7 +219,7 @@ export default {
         });
     },
     getPosts() {
-      //utilisée pour charger les posts et pour recharger le conposant
+      //utilisée pour charger les posts et pour recharger le composant
       this.$http.get(url + "posts", this.headers).then((res) => {
         this.posts = res.data;
       });
@@ -247,8 +240,7 @@ export default {
       if (currentUser) {
         this.token = currentUser.token;
         this.userId = currentUser.userId;
-        this.$http
-          .get(url + "users/" + currentUser.userId, this.headers)
+        this.$http.get(url + "users/" + currentUser.userId, this.headers)
           .then((res) => {
             this.admin = res.data.admin;
           })
@@ -307,11 +299,10 @@ body {
 .reset-button {
   background-color: transparent;
   border: solid 1px #ffb3b3;
-  color: #ffb3b3;
+  color: #e42701;
 }
 .reset-button:hover {
   background: #ffe4e4;
-  color: #fd2d01;
 }
 .button-col {
   display: flex;
@@ -360,11 +351,10 @@ body {
 .back-button {
   background-color: transparent;
   border: solid 1px #ffb3b3;
-  color: #ffb3b3;
+  color: #e42701;
 }
 .back-button:hover {
   background: #ffe4e4;
-  color: #fd2d01;
 }
 .remove-image {
   display: none;

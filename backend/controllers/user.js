@@ -137,7 +137,8 @@ exports.deleteUser = (req, res, next) => {
     },
     {
       where: { id: req.params.id },
-    })
+    }
+  )
     .then((data) => {
       if (data[0] === 0) {
         return res.status(404).json({
@@ -145,6 +146,7 @@ exports.deleteUser = (req, res, next) => {
         });
       } else {
         res.status(200).json({ message: "user deleted" });
-      }})
+      }
+    })
     .catch((err) => res.status(500).json({ err }));
 };

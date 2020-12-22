@@ -74,21 +74,19 @@ export default {
   name: "Login",
   data() {
     return {
-      email: "admin1@email.fr", //user1@email.fr
-      password: "password1",
+      email: "", 
+      password: "",
       error: "",
     };
   },
   methods: {
-    /** A SUPPRIMER Fonction de connexion avec appel à Axios via http et enregistrement dans le local storage*/
     //Fonction de connexion
     login() {
       const user = {
         email: this.email,
         password: this.password,
       };
-      this.$http
-        .post(url + "users/login", user)
+      this.$http.post(url + "users/login", user)
         .then((res) => {
           if (res.status === 200) {
             localStorage.setItem("currentUser", JSON.stringify(res.data));

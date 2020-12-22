@@ -3,8 +3,8 @@ const { secret } = require("../config.json");
 
 module.exports = (req, res, next) => {
   try {
-    const token = req.headers.authorization;
-    const decodedToken = jwt.verify(token, secret);
+    const token = req.headers.authorization; //Récupération du token du header
+    const decodedToken = jwt.verify(token, secret); //Décodage du token
     const userId = decodedToken.userId;
     if (req.headers.userid !== userId) {
       throw "User ID non valable !";

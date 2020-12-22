@@ -139,7 +139,6 @@ export default {
   watch: {
     error() {
       setTimeout(() => {
-          //afficher le message pendant 3 secondes
           this.error = "";
         }, 3000);
     }
@@ -219,8 +218,7 @@ export default {
       if (this.body.password) {
         formData.append("password", this.body.password);
       }
-      this.$http
-        .put(url + this.uri, formData, this.headers)
+      this.$http.put(url + this.uri, formData, this.headers)
         .then(() => {
           this.$parent.getPosts();
           this.switchDisplayProfile();
@@ -238,12 +236,11 @@ export default {
     },
     deleteUser() {
       let deleteConfirm = confirm(
-        //apparition de la fenetre
+        //apparition de la fenêtre
         "Attention. Toutes vos données seront supprimées. Cette action est irréversible."
       );
       if (deleteConfirm) {
-        this.$http
-          .delete(url + this.uri, this.headers)
+        this.$http.delete(url + this.uri, this.headers)
           .then(() => {
             this.logout();
           })
@@ -283,7 +280,7 @@ export default {
 .reset-button {
   background-color: transparent;
   border: solid 1px #ffb3b3;
-  color: #ffb3b3;
+  color: #e42701;
 }
 .reset-button:hover {
   background: #ffe4e4;
@@ -292,11 +289,10 @@ export default {
 .delete-button {
   background-color: transparent;
   border: solid 1px #ffb3b3;
-  color: #ffb3b3;
+  color:  #e42701;
 }
 .delete-button:hover {
   background: #ffe4e4;
-  color: #fd2d01;
 }
 .error-message {
   color: #fd2d01;

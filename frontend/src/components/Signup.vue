@@ -127,12 +127,10 @@ export default {
         return (this.error =
           "Votre mot de passe doit contenir au moins 8 caractères et au moins 1 lettre et 1 chiffre");
       }
-      this.$http
-        .post(url + "users", newUser)
+      this.$http.post(url + "users", newUser)
         .then((res) => {
           if (res.status === 200) {
-            this.$http
-              .post(url + "users/login", newUser) //si inscription fonctionne = login
+            this.$http.post(url + "users/login", newUser) //si inscription fonctionne = login
               .then((res) => {
                 if (res.status === 200) {
                   localStorage.setItem("currentUser", JSON.stringify(res.data));

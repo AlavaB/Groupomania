@@ -134,7 +134,6 @@ export default {
       }
     },
     displayRemoveImage() {
-      //affichage de la croix
       if (this.imageData) {
         return true;
       } else {
@@ -143,7 +142,6 @@ export default {
     },
   },
   props: {
-    //enfant
     post: {
       type: Object,
     },
@@ -170,8 +168,7 @@ export default {
       }
     },
     getUsersPosts() {
-      this.$http
-        .get(url + "posts/users/" + this.post.userId, this.headers)
+      this.$http.get(url + "posts/users/" + this.post.userId, this.headers)
         .then((res) => {
           this.$emit("users-posts", res.data);
           this.$emit("post-by-profile", true);
@@ -212,16 +209,14 @@ export default {
 
     getOnePost() {
       //rafraichir le post après annulation de modification
-      this.$http
-        .get(url + "posts/" + this.post.id, this.headers)
+      this.$http.get(url + "posts/" + this.post.id, this.headers)
         .then((res) => {
           this.modifyTextArea = res.data.content;
         });
     },
 
     deletePost() {
-      this.$http
-        .delete(url + this.uri, this.headers)
+      this.$http.delete(url + this.uri, this.headers)
         .then(() => {
           this.$parent.getPosts();
         })
@@ -231,8 +226,7 @@ export default {
     },
 
     sendModifyPost(data) {
-      this.$http
-        .put(url + this.uri, data, this.headers)
+      this.$http.put(url + this.uri, data, this.headers)
         .then(() => {
           this.$parent.getPosts(); //rafraichir tous les posts
           this.$refs.fileInput.value = "";
@@ -248,7 +242,6 @@ export default {
         (this.file === "delete" || this.file === "") &&
         this.body.content === ""
       ) {
-        //si vide je supprime
         this.deletePost();
       } else if (this.file === "delete") {
         let formData = new FormData();
@@ -327,11 +320,10 @@ export default {
 .reset-button {
   background-color: transparent;
   border: solid 1px #ffb3b3;
-  color: #ffb3b3;
+  color:#e42701;
 }
 .reset-button:hover {
   background: #ffe4e4;
-  color: #fd2d01;
 }
 .button-col {
   display: flex;
